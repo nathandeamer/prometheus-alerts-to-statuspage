@@ -1,0 +1,66 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: config
+spec:
+  route:
+    receiver: 'null' # Default route - do nothing!
+    routes:
+      - receiver: team1-slack
+        groupBy: ['owner', 'domain']
+        groupWait: 30s # Default
+        groupInterval: 5m # Don't send alert about new alerts in group for 5 minutes.
+        repeatInterval: 4h # Only resend the alert after 4 hours.
+        matchers:
+          - name: owner
+            value: team1
+        continue: true
+      - receiver: statuspage-webhook
+        groupBy: ['statusPageIOPageId', 'statusPageIOComponentId']
+        groupWait: 30s # Initial wait to group any other alerts which may trigger for the same group. (Default: 30s)
+        groupInterval: 1m # Don't send alert about new alerts in group for x (Default: 5m)
+        repeatInterval: 4h # Only resend the alert after x (Default: 4h)
+        matchers:
+          - name: statusPageIO
+            value: "true"
+        continue: true
+  receivers:
+    - name: 'null'
+    - name: statuspage-webhook
+      webhookConfigs:
+        - url: "http://prometheus-to-statuspage.default.svc.cluster.local:8080/alert"
+    - name: team1-slack
+      slackConfigs:
+        - apiURL:
+            name: 'slack'
+            key: 'team1SlackApiUrl'
+            optional: false
+          channel: '#team1'
+          sendResolved: true
+          title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if eq .CommonLabels.severity "critical" }}:fire:{{ else if eq .CommonLabels.severity "warning" }}:warning:{{ else if eq .CommonLabels.severity "info" }}:information_source:{{ else }}:question:{{ end }} {{ .CommonLabels.alertname }}'
+          iconEmoji: ':prometheus:'
+          actions:
+            - type: button
+              text: 'Runbook :green_book:'
+              url: '{{ (index .Alerts 0).Annotations.runbook }}'
+            - type: button
+              text: 'Query :mag:'
+              url: '{{ (index .Alerts 0).GeneratorURL }}'
+            - type: button
+              text: 'Dashboard :grafana:'
+              url: '{{ (index .Alerts 0).Annotations.dashboard }}'
+            - type: button
+              text: 'Silence :no_bell:'
+              url: '{{ .ExternalURL }}/#/silences/new?filter=%7B{{ range .CommonLabels.SortedPairs }}{{ if ne .Name "alertname" }}{{ .Name }}%3D"{{ .Value }}"%2C%20{{ end }}{{ end }}alertname%3D"{{ .CommonLabels.alertname }}"%7D'
+            - type: button
+              text: '{{ if .CommonAnnotations.link_text }}{{ .CommonAnnotations.link_text }}{{ else }}Link{{ end }} :link:'
+              url: '{{ .CommonAnnotations.link_url }}'
+          text: >-
+            {{ range .Alerts }}
+              *Fingerprint:* {{.Fingerprint}}
+              *Alert:* {{ .Labels.severity }} - {{ .Annotations.summary }}
+              *Description:* {{ .Annotations.description }}
+              *Details:*
+              {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+              {{ end }}
+            {{ end }}

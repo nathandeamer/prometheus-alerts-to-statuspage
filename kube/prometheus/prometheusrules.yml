@@ -1,0 +1,49 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: alerts
+spec:
+  groups:
+    - name: team1-alerts
+      rules:
+        - alert: P1-Team1-Checkout-Customer-Alert1
+          expr: vector(0) > 0
+          labels:
+            owner: team1
+            namespace: default
+            severity: critical
+            statusPageIO: true # Used for matchers - so needs to be a label
+            statusPageIOPageId: lgbxhqm818kw # Used for grouping - so needs to be a label
+            statusPageIOComponentId: 818336q5bjxv # Used for grouping - so needs to be a label
+          annotations:
+            runbook: www.google.com
+            dashboard: www.bing.com
+            summary: My First Alert Summary
+            description: My First Alert Description
+            statusPageIOComponentName: Checkout (Customer)
+            statusPageIOInitialStatus: identified # identified|investigating|monitoring|resolved
+            statusPageIOImpactOverride: minor  # none|maintenance|minor|major|critical
+            statusPageIOComponentStatus: partial_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statusPageIOSummary: Customers are currently unable to checkout (P1-Team1-Checkout-Customer-Alert1)
+
+    - name: team2-alerts
+      rules:
+        - alert: P1-Team2-Checkout-Customer-Alert1
+          expr: vector(0) > 0
+          labels:
+            owner: team2
+            namespace: default
+            severity: critical
+            statusPageIO: true # Used for matchers - so needs to be a label
+            statusPageIOPageId: lgbxhqm818kw # Used for grouping - so needs to be a label
+            statusPageIOComponentId: 818336q5bjxv # Used for grouping - so needs to be a label
+          annotations:
+            runbook: www.google.com
+            dashboard: www.bing.com
+            summary: My First Alert Summary
+            description: My First Alert Description
+            statusPageIOComponentName: Checkout (Customer)
+            statusPageIOInitialStatus: identified # identified|investigating|monitoring|resolved
+            statusPageIOImpactOverride: critical  # none|maintenance|minor|major|critical
+            statusPageIOComponentStatus: major_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statusPageIOSummary: Customer checkout synthetic tests are failing (P1-Team2-Checkout-Customer-Alert1)

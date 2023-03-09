@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: prometheus-to-statuspage
+  labels:
+    app: prometheus-to-statuspage
+spec:
+  selector:
+    app: prometheus-to-statuspage
+  ports:
+    - name: web
+      protocol: TCP
+      port: 8080
+      targetPort: 8080

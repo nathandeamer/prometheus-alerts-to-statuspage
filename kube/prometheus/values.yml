@@ -1,0 +1,10 @@
+prometheus:
+  prometheusSpec:
+    ruleSelector: {}
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorSelectorNilUsesHelmValues: false
+alertmanager:
+  alertmanagerSpec:
+    alertmanagerConfigNamespaceSelector: {}
+    alertmanagerConfigSelector: {}
