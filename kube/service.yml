@@ -1,14 +1,14 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: prometheus-to-statuspage
+  name: prometheus-alerts-to-statuspage
   labels:
-    app: prometheus-to-statuspage
+    app: prometheus-alerts-to-statuspage
 spec:
   selector:
-    app: prometheus-to-statuspage
+    app: prometheus-alerts-to-statuspage
   ports:
-    - name: web
+    - name: http-web
       protocol: TCP
       port: 8080
       targetPort: 8080

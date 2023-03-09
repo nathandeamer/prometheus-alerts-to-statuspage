@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prometheus-to-statuspage
+  name: prometheus-alerts-to-statuspage
   namespace: default
   labels:
-    app: prometheus-to-statuspage
+    app: prometheus-alerts-to-statuspage
 spec:
   selector:
     matchLabels:
-      app: prometheus-to-statuspage
+      app: prometheus-alerts-to-statuspage
   replicas: 1
   template:
     metadata:
       labels:
-        app: prometheus-to-statuspage
+        app: prometheus-alerts-to-statuspage
     spec:
       containers:
-        - name: prometheus-to-statuspage
-          image: nathandeamer/prometheus-to-statuspage:latest
+        - name: prometheus-alerts-to-statuspage
+          image: nathandeamer/prometheus-alerts-to-statuspage:latest
           imagePullPolicy: Never
           ports:
-            - name: web
+            - name: http-web
               containerPort: 8080
