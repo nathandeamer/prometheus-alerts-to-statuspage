@@ -103,7 +103,7 @@ Only when all alerts have stopped firing for the group in prometheus will the al
 5. Deploy the prometheus service and deployment `kubectl apply -f kube/service.yml kube/deployment.yml`
 6. Edit the sample alert `kubectl edit prometheusrules.monitoring.coreos.com alerts` by changing to `vector(1) > 0` to make the alert(s) fire.
 
-## Implementation detail
+## Implementation details
 ```mermaid
 sequenceDiagram
 
@@ -113,20 +113,22 @@ sequenceDiagram
 
     alertmanager ->>+ prometheus-alerts-to-statuspage: AlertWrapper
 
-    alt is FIRING
+    alt If AlertWrapper.FIRING
         prometheus-alerts-to-statuspage ->>+ statuspage.io: Get open incidents for page/component
         statuspage.io ->>- prometheus-alerts-to-statuspage: Open Incidents
         
-        alt No Open Incident
-            prometheus-alerts-to-statuspage ->>+ statuspage.io: Create incident
-            statuspage.io ->>- prometheus-alerts-to-statuspage: Created Incident
-        else Open incident
+        alt If Existing Incident
+            prometheus-alerts-to-statuspage ->> prometheus-alerts-to-statuspage: Calculate latest incident details from AlertWrapper.alerts
             prometheus-alerts-to-statuspage ->>+ statuspage.io: Update existing incident
             statuspage.io ->>- prometheus-alerts-to-statuspage: Updated Incident
+        else If New  Incident
+             prometheus-alerts-to-statuspage ->> prometheus-alerts-to-statuspage: Calculate incident details from AlertWrapper.alerts
+             prometheus-alerts-to-statuspage ->>+ statuspage.io: Create incident
+             statuspage.io ->>- prometheus-alerts-to-statuspage: Created Incident
         end
 
-    else is RESOLVED
-        prometheus-alerts-to-statuspage ->>+ statuspage.io: Resolve open incident
+    else If AlertWrapper.RESOLVED
+        prometheus-alerts-to-statuspage ->>+ statuspage.io: Resolve incident
         statuspage.io ->>- prometheus-alerts-to-statuspage: Resolved Incident
     end
     
