@@ -21,7 +21,7 @@ But the underlying cause for most of these alerts is probably the same - e.g. a 
 #### Required:
 1. `STATUSPAGE_APIKEY` - Status page API Key
 #### Optional:
-If you want to override any of the handlebar templates (see [4. Status page: Configuring incident title and body](###4-Status-page-Configuring-incident-title-and-body)) 
+If you want to override any of the handlebar templates (see [4. Status page: Configuring incident title and body](#4-status-page-configuring-incident-title-and-body)) 
 1. `STATUSPAGE_INCIDENT_TITLE_TEMPLATE`
 2. `STATUSPAGE_INCIDENT_CREATED_BODY_TEMPLATE`
 3. `STATUSPAGE_INCIDENT_UPDATED_BODY_TEMPLATE`
