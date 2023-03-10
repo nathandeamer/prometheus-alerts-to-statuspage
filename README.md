@@ -96,9 +96,9 @@ Only when all alerts have stopped firing for the group in prometheus will the al
 
 
 ##Local usage
-1. Have a local k8s cluster
+1. Local k8s cluster
 2. Install [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack): `helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack -f kube/prometheus/values.yml`
 3. Apply the prometheus rules and alertmanager config `kubectl apply -f kube/prometheus/alertmanagerconfig.yml kube/prometheus/prometheusrules.yml`
 4. Build the image: `./gradlew bootBuildImage --imageName=nathandeamer/prometheus-alerts-to-statuspage`
 5. Deploy the prometheus service and deployment `kubectl apply -f kube/service.yml kube/deployment.yml`
-6. Edit the sample alert `kubectl edit prometheusrules.monitoring.coreos.com alerts` by changing to `vector(1) > 0` to make the alert fire.
+6. Edit the sample alert `kubectl edit prometheusrules.monitoring.coreos.com alerts` by changing to `vector(1) > 0` to make the alert(s) fire.
