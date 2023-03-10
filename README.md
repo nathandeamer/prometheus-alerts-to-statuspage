@@ -13,7 +13,7 @@ But the underlying cause for most of these alerts is probably the same - e.g. a 
 
 ## Prerequisites
 1. A [statuspage.io](https://www.atlassian.com/software/statuspage) account
-2. Page and Components configured in status page
+2. Page and Components configured in statuspage.io and the page and component ids.
 3. Your [statuspage.io](https://www.atlassian.com/software/statuspage) API key
 
 ## Usage:

@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 public class StatusPageClientConfiguration {
 
     @Bean
-    public RequestInterceptor requestInterceptor(@Value("${application.statusPageAuth}") String auth) {
+    public RequestInterceptor requestInterceptor(@Value("${statusPageAuth}") String auth) {
         return requestTemplate -> {
             requestTemplate.header(HttpHeaders.AUTHORIZATION, auth);
         };

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name="statuspage", url="${application.statusPageApiUrl}", configuration = StatusPageClientConfiguration.class)
+@FeignClient(name="statuspage", url="${statusPageApiUrl}", configuration = StatusPageClientConfiguration.class)
 public interface StatusPageClient {
 
     @PostMapping(value="/pages/{pageId}/incidents")
@@ -27,4 +27,3 @@ public interface StatusPageClient {
     @GetMapping(value="/pages/{pageId}/incidents/unresolved")
     List<IncidentResponse> getUnresolvedIncidents(@PathVariable("pageId") String pageId);
 }
-
