@@ -77,7 +77,7 @@ e.g. for the status page incident title we prepend with the `statusPageIOCompone
 
 ### 5. Status Page: Multiple grouped alerts
 In the event that there are multiple alerts being grouped by prometheus either for the initial alert, or alerts which are added to the group later the...
-1. **Status** of the incident will be kept up to date with the 'highest' status for **ALL** alerts in the group.
+1. **Status** of the incident will be kept up to date with the 'highest' status for **ALL** alerts in the group.  
 **Order**: investigating -> identified -> monitoring.  
 **Default**: identified.
 
