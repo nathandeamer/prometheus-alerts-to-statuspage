@@ -29,11 +29,12 @@ Configure your prometheus alerts with the `statuePageIO` labels and annotations
     statusPageIOComponentId: 818336q5bjxv # The status page component you want to update (from statuspage.io)
   annotations:
     statusPageIOComponentName: Checkout (Customer) # Used for incident title on status page.
-    statusPageIOInitialStatus: identified # identified|investigating|monitoring|resolved
+    statusPageIOStatus: identified # identified|investigating|monitoring|resolved
     statusPageIOImpactOverride: minor  # none|maintenance|minor|major|critical
     statusPageIOComponentStatus: partial_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
     statusPageIOSummary: Customers are currently unable to checkout # Used for display text on status page
 ```
+Hopefully, all the labels and annotations are self-explanatory.
 
 ### AlertManager configuration
 Configure your alert webhook route to group by `statusPageIOPageId` and `statusPageIOComponentId`.
@@ -51,6 +52,35 @@ matchers:
   webhookConfigs:
     - url: "http://prometheus-alerts-to-statuspage.default.svc.cluster.local:8080/alert"
 ```
+
+### Status page: Configuring incident title and body
+The project uses [handlebars.java](https://github.com/jknack/handlebars.java) for templating.  
+The [AlertWrapper](src/main/java/com/nathandeamer/prometheustostatuspage/alertmanager/dto/AlertWrapper.java) class is passed into the templates for referencing. 
+
+e.g. for the status page incident title we prepend with the `statusPageIOComponentName` annotation from the alert
+```java
+{{#if (lookup this.commonAnnotations 'statusPageIOComponentName')}}
+    {{lookup this.commonAnnotations 'statusPageIOComponentName'}} -
+{{/if}}Uh oh, something has gone wrong
+```
+**Output**: Checkout (Customer) - uh oh, something has gone wrong
+
+### Status Page: Multiple grouped alerts
+In the event that there are multiple alerts being grouped by prometheus either for the initial alert, or alerts which are added to the group later the...
+1. **Status** of the incident will be kept up to date with the 'highest' status for **ALL** alerts in the group.
+**Order**: investigating -> identified -> monitoring.  
+**Default**: identified.
+
+
+2. **Impact Override** of the incident will be kept up to date with the 'highest' impact override for **ALL** alerts in the group.   
+**Order**: none -> maintenance -> minor -> major -> critical.  
+**Default**: none.
+
+
+4. **Components status** will be kept up to date with the 'highest' component status for **FIRING** alerts in the group.  
+**Order**: none -> operational -> under_maintenance -> degraded_performance -> partial_outage -> major_outage  
+**Default**: none
+
 
 ## How it works
 When an alert is triggered for the group, `prometheus-alerts-to-statuspage` will either create a new incident or update an existing incident depending if there is already one open.  

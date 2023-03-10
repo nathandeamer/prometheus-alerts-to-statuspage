@@ -26,7 +26,7 @@ public class StatusPageService {
 
     public static final String STATUS_PAGE_IO_PAGE_ID = "statusPageIOPageId";
     public static final String STATUS_PAGE_IO_COMPONENT_ID = "statusPageIOComponentId";
-    public static final String STATUS_PAGE_IO_INITIAL_STATUS = "statusPageIOInitialStatus";
+    public static final String STATUS_PAGE_IO_STATUS = "statusPageIOStatus";
     public static final String STATUS_PAGE_IO_IMPACT_OVERRIDE = "statusPageIOImpactOverride";
     public static final String STATUS_PAGE_IO_COMPONENT_STATUS = "statusPageIOComponentStatus";
 
@@ -58,10 +58,10 @@ public class StatusPageService {
         return statusPageClient.createIncident(pageId, IncidentRequestWrapper.builder()
                 .incidentRequest(IncidentRequest.builder()
                         .name(statusPageIncidentTitleTemplate.apply(alertWrapper))
-                        .impactOverride(getMaxImpactOverride(alertWrapper, false).name().toLowerCase())
-                        .status(getMaxStatus(alertWrapper, false).name().toLowerCase())
+                        .impactOverride(getMaxImpactOverride(alertWrapper).name().toLowerCase())
+                        .status(getMaxStatus(alertWrapper).name().toLowerCase())
                         .body(statusPageIncidentCreatedBodyTemplate.apply(alertWrapper))
-                        .components(Map.of(componentId, getMaxComponentStatus(alertWrapper, true).getValue()))
+                        .components(Map.of(componentId, getMaxComponentStatus(alertWrapper).getValue()))
                         .componentIds(List.of(componentId))
                         .build())
                 .build()).getId();
@@ -75,10 +75,10 @@ public class StatusPageService {
         statusPageClient.updateIncident(incident.getPageId(), incident.getId() ,
                 IncidentRequestWrapper.builder()
                         .incidentRequest(IncidentRequest.builder()
-                                .impactOverride(getMaxImpactOverride(alertWrapper, false).name().toLowerCase())
-                                .status(getMaxStatus(alertWrapper, false).name().toLowerCase())
+                                .impactOverride(getMaxImpactOverride(alertWrapper).name().toLowerCase())
+                                .status(getMaxStatus(alertWrapper).name().toLowerCase())
                                 .body(statusPageIncidentUpdatedBodyTemplate.apply(alertWrapper))
-                                .components(Map.of(componentId, getMaxComponentStatus(alertWrapper, true).getValue()))
+                                .components(Map.of(componentId, getMaxComponentStatus(alertWrapper).getValue()))
                                 .componentIds(List.of(componentId))
                                 .build())
                         .build());
@@ -92,7 +92,7 @@ public class StatusPageService {
         statusPageClient.updateIncident(incident.getPageId(), incident.getId() ,
                 IncidentRequestWrapper.builder()
                         .incidentRequest(IncidentRequest.builder()
-                                .impactOverride(getMaxImpactOverride(alertWrapper, false).name().toLowerCase())
+                                .impactOverride(getMaxImpactOverride(alertWrapper).name().toLowerCase())
                                 .status(Status.RESOLVED.toString().toLowerCase())
                                 .body(statusPageIncidentResolvedBodyTemplate.apply(alertWrapper))
                                 .components(Map.of(componentId, ComponentStatus.OPERATIONAL.getValue()))
@@ -113,30 +113,28 @@ public class StatusPageService {
                 .collect(Collectors.toList());
     }
 
-    private Status getMaxStatus(AlertWrapper alertWrapper, boolean firingOnly) {
+    private Status getMaxStatus(AlertWrapper alertWrapper) {
         return alertWrapper.getAlerts()
                 .stream()
-                .filter(firingOnly ? r -> r.getStatus() == com.nathandeamer.prometheustostatuspage.alertmanager.dto.Status.FIRING : r -> true)
-                .map(r -> r.getAnnotations().getOrDefault(STATUS_PAGE_IO_INITIAL_STATUS, Status.IDENTIFIED.name()))
+                .map(r -> r.getAnnotations().getOrDefault(STATUS_PAGE_IO_STATUS, Status.IDENTIFIED.name()))
                 .map(r -> Status.valueOf(r.toUpperCase()))
                 .max(Comparator.comparing(Enum::ordinal))
                 .orElse(Status.IDENTIFIED);
     }
 
-    private ImpactOverride getMaxImpactOverride(AlertWrapper alertWrapper, boolean firingOnly) {
+    private ImpactOverride getMaxImpactOverride(AlertWrapper alertWrapper) {
         return alertWrapper.getAlerts()
                 .stream()
-                .filter(firingOnly ? r -> r.getStatus() == com.nathandeamer.prometheustostatuspage.alertmanager.dto.Status.FIRING : r -> true)
                 .map(r -> r.getAnnotations().getOrDefault(STATUS_PAGE_IO_IMPACT_OVERRIDE, ImpactOverride.NONE.name()))
                 .map(r -> ImpactOverride.valueOf(r.toUpperCase()))
                 .max(Comparator.comparing(Enum::ordinal))
                 .orElse(ImpactOverride.NONE);
     }
 
-    private ComponentStatus getMaxComponentStatus(AlertWrapper alertWrapper, boolean firingOnly) {
+    private ComponentStatus getMaxComponentStatus(AlertWrapper alertWrapper) {
         return alertWrapper.getAlerts()
                 .stream()
-                .filter(firingOnly ? r -> r.getStatus() == com.nathandeamer.prometheustostatuspage.alertmanager.dto.Status.FIRING : r -> true)
+                .filter(r -> r.getStatus() == com.nathandeamer.prometheustostatuspage.alertmanager.dto.Status.FIRING)
                 .map(r -> r.getAnnotations().getOrDefault(STATUS_PAGE_IO_COMPONENT_STATUS, ComponentStatus.NONE.getValue()))
                 .map(r -> ComponentStatus.valueOf(r.toUpperCase()))
                 .max(Comparator.comparing(Enum::ordinal))
