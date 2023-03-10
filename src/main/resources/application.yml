@@ -1,8 +1,8 @@
-statusPageApiUrl: https://api.statuspage.io/v1
-statusPageAuth: NotTheRealAPIKey
+statuspage-apiurl: https://api.statuspage.io/v1
+statuspage-apikey: NotTheRealAuth
 
 # Customer (Checkout) - Uh oh, something has gone wrong
-statusPageIncidentTitleTemplate: >-
+statuspage-incident-title-template: >-
   {{#if (lookup this.commonAnnotations 'statusPageIOComponentName')}}
   {{lookup this.commonAnnotations 'statusPageIOComponentName'}} -
   {{/if}}Uh oh, something has gone wrong
@@ -10,7 +10,7 @@ statusPageIncidentTitleTemplate: >-
 # Don't panic, our amazing team of engineers has been alerted!
 # Firing - Customer checkout tests have failed
 # Firing - Customer can't add products to their basket
-statusPageIncidentCreatedBodyTemplate: >-
+statuspage-incident-created-body-template: >-
   Don't panic, our amazing team of engineers has been alerted!
   {{#each alerts}}
   {{#if (lookup this.annotations 'statusPageIOSummary')}}
@@ -18,7 +18,7 @@ statusPageIncidentCreatedBodyTemplate: >-
   {{/if}}
   {{/each}}
 
-statusPageIncidentUpdatedBodyTemplate: >-
+statuspage-incident-updated-body-template: >-
   Don't worry, our team of engineers are investigating!
   {{#each alerts}}
   {{#if (lookup this.annotations 'statusPageIOSummary')}}
@@ -26,7 +26,7 @@ statusPageIncidentUpdatedBodyTemplate: >-
   {{/if}}
   {{/each}}
 
-statusPageIncidentResolvedBodyTemplate: >-
+statuspage-incident-resolved-body-template: >-
   Our engineers have fixed the problem. They will be doing a postmortem within the next 48 hours.
   {{#each alerts}}
   {{#if (lookup this.annotations 'statusPageIOSummary')}}

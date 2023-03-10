@@ -17,7 +17,17 @@ But the underlying cause for most of these alerts is probably the same - e.g. a 
 3. Your [statuspage.io](https://www.atlassian.com/software/statuspage) API key
 
 ## Usage:
-### Prometheus alerts
+### 1. Environment variables:
+#### Required:
+1. `STATUSPAGE_APIKEY` - Status page API Key
+#### Optional:
+If you want to override any of the handlebar templates (see Configuring incident title and body) 
+1. `STATUSPAGE_INCIDENT_TITLE_TEMPLATE`
+2. `STATUSPAGE_INCIDENT_CREATED_BODY_TEMPLATE`
+3. `STATUSPAGE_INCIDENT_UPDATED_BODY_TEMPLATE`
+4. `STATUSPAGE_INCIDENT_RESOLVED_BODY_TEMPLATE`
+
+### 2. Prometheus alerts
 Configure your prometheus alerts with the `statuePageIO` labels and annotations
 
 ```yaml
@@ -36,7 +46,7 @@ Configure your prometheus alerts with the `statuePageIO` labels and annotations
 ```
 Hopefully, all the labels and annotations are self-explanatory.
 
-### AlertManager configuration
+### 3. AlertManager configuration
 Configure your alert webhook route to group by `statusPageIOPageId` and `statusPageIOComponentId`.
 ```yaml
 - receiver: statuspage-webhook
@@ -53,7 +63,7 @@ matchers:
     - url: "http://prometheus-alerts-to-statuspage.default.svc.cluster.local:8080/alert"
 ```
 
-### Status page: Configuring incident title and body
+### 4. Status page: Configuring incident title and body
 The project uses [handlebars.java](https://github.com/jknack/handlebars.java) for templating.  
 The [AlertWrapper](src/main/java/com/nathandeamer/prometheustostatuspage/alertmanager/dto/AlertWrapper.java) class is passed into the templates for referencing. 
 
@@ -65,7 +75,7 @@ e.g. for the status page incident title we prepend with the `statusPageIOCompone
 ```
 **Output**: Checkout (Customer) - uh oh, something has gone wrong
 
-### Status Page: Multiple grouped alerts
+### 5. Status Page: Multiple grouped alerts
 In the event that there are multiple alerts being grouped by prometheus either for the initial alert, or alerts which are added to the group later the...
 1. **Status** of the incident will be kept up to date with the 'highest' status for **ALL** alerts in the group.
 **Order**: investigating -> identified -> monitoring.  
@@ -100,8 +110,9 @@ Only when all alerts have stopped firing for the group in prometheus will the al
 2. Install [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack): `helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack -f kube/prometheus/values.yml`
 3. Apply the prometheus rules and alertmanager config `kubectl apply -f kube/prometheus/alertmanagerconfig.yml kube/prometheus/prometheusrules.yml`
 4. Build the image: `./gradlew bootBuildImage --imageName=nathandeamer/prometheus-alerts-to-statuspage`
-5. Deploy the prometheus service and deployment `kubectl apply -f kube/service.yml kube/deployment.yml`
-6. Edit the sample alert `kubectl edit prometheusrules.monitoring.coreos.com alerts` by changing to `vector(1) > 0` to make the alert(s) fire.
+5. Create a secret with your statuspage.io api key: `kubectl create secret generic statuspage --from-literal=apikey=[your-api-key]`
+6. Deploy the prometheus service and deployment `kubectl apply -f kube/service.yml kube/deployment.yml`
+7. Edit the sample alert `kubectl edit prometheusrules.monitoring.coreos.com alerts` by changing to `vector(1) > 0` to make the alert(s) fire.
 
 ## Implementation details
 ```mermaid

@@ -22,3 +22,9 @@ spec:
           ports:
             - name: http-web
               containerPort: 8080
+          env:
+            - name: STATUSPAGE_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: statuspage
+                  key: apikey

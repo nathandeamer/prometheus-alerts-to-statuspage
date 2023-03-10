@@ -37,10 +37,10 @@ public class StatusPageService {
     private final Template statusPageIncidentResolvedBodyTemplate;
 
     @SneakyThrows
-    public StatusPageService(@Value("${statusPageIncidentTitleTemplate}") String statusPageIncidentTitleTemplate,
-                             @Value("${statusPageIncidentCreatedBodyTemplate}") String statusPageIncidentCreatedBodyTemplate,
-                             @Value("${statusPageIncidentUpdatedBodyTemplate}") String statusPageIncidentUpdatedBodyTemplate,
-                             @Value("${statusPageIncidentResolvedBodyTemplate}") String statusPageIncidentResolvedBodyTemplate,
+    public StatusPageService(@Value("${statuspage-incident-title-template}") String statusPageIncidentTitleTemplate,
+                             @Value("${statuspage-incident-created-body-template}") String statusPageIncidentCreatedBodyTemplate,
+                             @Value("${statuspage-incident-updated-body-template}") String statusPageIncidentUpdatedBodyTemplate,
+                             @Value("${statuspage-incident-resolved-body-template}") String statusPageIncidentResolvedBodyTemplate,
                              StatusPageClient statusPageClient, Handlebars handlebars) {
         this.statusPageClient = statusPageClient;
         this.statusPageIncidentTitleTemplate = handlebars.compileInline(statusPageIncidentTitleTemplate);

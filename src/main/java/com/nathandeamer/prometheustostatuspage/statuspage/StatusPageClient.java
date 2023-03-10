@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name="statuspage", url="${statusPageApiUrl}", configuration = StatusPageClientConfiguration.class)
+@FeignClient(name="statuspage", url="${statuspage-apiurl}", configuration = StatusPageClientConfiguration.class)
 public interface StatusPageClient {
 
     @PostMapping(value="/pages/{pageId}/incidents")
