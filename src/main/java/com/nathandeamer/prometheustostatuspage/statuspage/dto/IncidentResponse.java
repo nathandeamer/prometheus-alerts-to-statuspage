@@ -1,11 +1,13 @@
 package com.nathandeamer.prometheustostatuspage.statuspage.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Value;
 
 import java.util.List;
 
 @Value
+@Builder
 public class IncidentResponse {
     private final String id;
     private final List<IncidentComponentResponse> components;

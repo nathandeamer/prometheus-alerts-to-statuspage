@@ -16,7 +16,7 @@ public class PrometheusToStatusPageService {
     private final StatusPageService statusPageService;
 
     public void alert(AlertWrapper alertWrapper) {
-        List<IncidentResponse> unresolvedIncidentsForAlert = statusPageService.getUnresolvedIncidentsForPageIdAndComponentId(alertWrapper);
+        List<IncidentResponse> unresolvedIncidentsForAlert = statusPageService.getUnresolvedIncidentsForAlertWrapper(alertWrapper);
 
         if (Status.RESOLVED == alertWrapper.getStatus()) { // The 'AlertWrapper' status will only be RESOLVED if all alerts within are also resolved.
             unresolvedIncidentsForAlert.forEach(incidentResponse -> statusPageService.resolveIncident(incidentResponse, alertWrapper));

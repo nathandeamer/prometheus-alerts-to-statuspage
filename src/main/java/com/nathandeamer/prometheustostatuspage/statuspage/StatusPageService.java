@@ -101,7 +101,7 @@ public class StatusPageService {
                         .build());
     }
 
-    public List<IncidentResponse> getUnresolvedIncidentsForPageIdAndComponentId(AlertWrapper alertWrapper) {
+    public List<IncidentResponse> getUnresolvedIncidentsForAlertWrapper(AlertWrapper alertWrapper) {
         String pageId = alertWrapper.getCommonLabels().get(STATUS_PAGE_IO_PAGE_ID);
         String componentId = alertWrapper.getCommonLabels().get(STATUS_PAGE_IO_COMPONENT_ID);
 
