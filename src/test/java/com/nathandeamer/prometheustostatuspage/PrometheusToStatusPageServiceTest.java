@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 public class PrometheusToStatusPageServiceTest {
 
-    private StatusPageService mockStatusPageService = mock(StatusPageService.class);
+    private final StatusPageService mockStatusPageService = mock(StatusPageService.class);
 
     private final PrometheusToStatusPageService underTest = new PrometheusToStatusPageService(mockStatusPageService);
 

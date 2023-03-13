@@ -48,7 +48,7 @@ class ApplicationTests {
 	// Shared Test data
 	private final String statusPageIOPageIdValue = "statusPageIOPageId";
 	private final String statusPageIOComponentIdValue = "statusPageIOComponentId";
-	private final String statusPageIOIncidentId = "statusPageIOIncidentId";
+	private final String statusPageIOIncidentIdValue = "statusPageIOIncidentId";
 	private final String statusPageIOComponentNameValue = "Status Page Component Name";
 	private final String statusPageIOSummaryValue = "Summary for Status Page";
 
@@ -59,11 +59,10 @@ class ApplicationTests {
 	public ObjectMapper objectMapper;
 
 	@MockBean
-	public StatusPageClient statusPageClient;
+	public StatusPageClient mockStatusPageClient;
 
 	@Captor
 	ArgumentCaptor<IncidentRequestWrapper> incidentRequestWrapperCaptor;
-
 
 	@Test
 	public void testShouldCreateNewStatusPageIncidentForSingleAlert() throws Exception {
@@ -81,13 +80,13 @@ class ApplicationTests {
 						.build())
 				.build();
 
-		when(statusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(Collections.emptyList());
-		when(statusPageClient.createIncident(eq(statusPageIOPageIdValue), eq(expectedRequest)))
-				.thenReturn(IncidentResponse.builder().id(statusPageIOIncidentId).build());
+		when(mockStatusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(Collections.emptyList());
+		when(mockStatusPageClient.createIncident(eq(statusPageIOPageIdValue), eq(expectedRequest)))
+				.thenReturn(IncidentResponse.builder().id(statusPageIOIncidentIdValue).build());
 
 		doPost(alertWrapper);
 
-		verify(statusPageClient).createIncident(eq(statusPageIOPageIdValue), incidentRequestWrapperCaptor.capture());
+		verify(mockStatusPageClient).createIncident(eq(statusPageIOPageIdValue), incidentRequestWrapperCaptor.capture());
 
 		assertEquals(expectedRequest, incidentRequestWrapperCaptor.getValue());
 	}
@@ -114,12 +113,12 @@ class ApplicationTests {
 						.build())
 				.build();
 
-		when(statusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(Collections.emptyList());
-		when(statusPageClient.createIncident(eq(statusPageIOPageIdValue), eq(expectedRequest))).thenReturn(IncidentResponse.builder().id("statusPageIOIncidentId").build());
+		when(mockStatusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(Collections.emptyList());
+		when(mockStatusPageClient.createIncident(eq(statusPageIOPageIdValue), eq(expectedRequest))).thenReturn(IncidentResponse.builder().id(statusPageIOIncidentIdValue).build());
 
 		doPost(alertWrapper);
 
-		verify(statusPageClient).createIncident(eq(statusPageIOPageIdValue), incidentRequestWrapperCaptor.capture());
+		verify(mockStatusPageClient).createIncident(eq(statusPageIOPageIdValue), incidentRequestWrapperCaptor.capture());
 
 		assertEquals(expectedRequest, incidentRequestWrapperCaptor.getValue());
 	}
@@ -146,12 +145,12 @@ class ApplicationTests {
 						.build())
 				.build();
 
-		when(statusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(Collections.emptyList());
-		when(statusPageClient.createIncident(eq(statusPageIOPageIdValue), eq(expectedRequest))).thenReturn(IncidentResponse.builder().id("statusPageIOIncidentId").build());
+		when(mockStatusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(Collections.emptyList());
+		when(mockStatusPageClient.createIncident(eq(statusPageIOPageIdValue), eq(expectedRequest))).thenReturn(IncidentResponse.builder().id(statusPageIOIncidentIdValue).build());
 
 		doPost(alertWrapper);
 
-		verify(statusPageClient).createIncident(eq(statusPageIOPageIdValue), incidentRequestWrapperCaptor.capture());
+		verify(mockStatusPageClient).createIncident(eq(statusPageIOPageIdValue), incidentRequestWrapperCaptor.capture());
 
 		assertEquals(expectedRequest, incidentRequestWrapperCaptor.getValue());
 	}
@@ -177,9 +176,9 @@ class ApplicationTests {
 						.build())
 				.build();
 
-		when(statusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(List.of(
+		when(mockStatusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(List.of(
 				IncidentResponse.builder()
-						.id(statusPageIOIncidentId)
+						.id(statusPageIOIncidentIdValue)
 						.pageId(statusPageIOPageIdValue)
 						.components(List.of(IncidentComponentResponse.builder()
 								.id(statusPageIOComponentIdValue)
@@ -188,7 +187,7 @@ class ApplicationTests {
 
 		doPost(alertWrapper);
 
-		verify(statusPageClient).updateIncident(eq(statusPageIOPageIdValue), eq(statusPageIOIncidentId), incidentRequestWrapperCaptor.capture());
+		verify(mockStatusPageClient).updateIncident(eq(statusPageIOPageIdValue), eq(statusPageIOIncidentIdValue), incidentRequestWrapperCaptor.capture());
 
 		assertEquals(expectedRequest, incidentRequestWrapperCaptor.getValue());
 	}
@@ -214,9 +213,9 @@ class ApplicationTests {
 						.build())
 				.build();
 
-		when(statusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(List.of(
+		when(mockStatusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(List.of(
 				IncidentResponse.builder()
-						.id(statusPageIOIncidentId)
+						.id(statusPageIOIncidentIdValue)
 						.pageId(statusPageIOPageIdValue)
 						.components(List.of(IncidentComponentResponse.builder()
 								.id(statusPageIOComponentIdValue)
@@ -225,7 +224,7 @@ class ApplicationTests {
 
 		doPost(alertWrapper);
 
-		verify(statusPageClient).updateIncident(eq(statusPageIOPageIdValue), eq(statusPageIOIncidentId), incidentRequestWrapperCaptor.capture());
+		verify(mockStatusPageClient).updateIncident(eq(statusPageIOPageIdValue), eq(statusPageIOIncidentIdValue), incidentRequestWrapperCaptor.capture());
 
 		assertEquals(expectedRequest, incidentRequestWrapperCaptor.getValue());
 	}
@@ -245,21 +244,21 @@ class ApplicationTests {
 						.build())
 				.build();
 
-		when(statusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(List.of(
+		when(mockStatusPageClient.getUnresolvedIncidents(statusPageIOPageIdValue)).thenReturn(List.of(
 				IncidentResponse.builder()
-						.id(statusPageIOIncidentId)
+						.id(statusPageIOIncidentIdValue)
 						.pageId(statusPageIOPageIdValue)
 						.components(List.of(IncidentComponentResponse.builder()
 										.id(statusPageIOComponentIdValue)
 								.build()))
 						.build()));
 
-		when(statusPageClient.updateIncident(eq(statusPageIOPageIdValue), eq(statusPageIOIncidentId), eq(expectedRequest)))
-				.thenReturn(IncidentResponse.builder().id(statusPageIOIncidentId).build());
+		when(mockStatusPageClient.updateIncident(eq(statusPageIOPageIdValue), eq(statusPageIOIncidentIdValue), eq(expectedRequest)))
+				.thenReturn(IncidentResponse.builder().id(statusPageIOIncidentIdValue).build());
 
 		doPost(alertWrapper);
 
-		verify(statusPageClient).updateIncident(eq(statusPageIOPageIdValue), eq(statusPageIOIncidentId), incidentRequestWrapperCaptor.capture());
+		verify(mockStatusPageClient).updateIncident(eq(statusPageIOPageIdValue), eq(statusPageIOIncidentIdValue), incidentRequestWrapperCaptor.capture());
 
 		assertEquals(expectedRequest, incidentRequestWrapperCaptor.getValue());
 	}
