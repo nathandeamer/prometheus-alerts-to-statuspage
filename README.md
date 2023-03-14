@@ -25,7 +25,9 @@ If you want to override any of the handlebar templates (see [4. Status page: Con
 1. `STATUSPAGE_INCIDENT_TITLE_TEMPLATE`
 2. `STATUSPAGE_INCIDENT_CREATED_BODY_TEMPLATE`
 3. `STATUSPAGE_INCIDENT_UPDATED_BODY_TEMPLATE`
-4. `STATUSPAGE_INCIDENT_RESOLVED_BODY_TEMPLATE`
+4. `STATUSPAGE_INCIDENT_RESOLVED_BODY_TEMPLATE`  
+
+**Defaults:** [application.yml](src/main/resources/application.yml)
 
 ### 2. Prometheus alerts
 Configure your prometheus alerts with the `statuePageIO` labels and annotations
@@ -35,8 +37,8 @@ Configure your prometheus alerts with the `statuePageIO` labels and annotations
   expr: vector(0) > 0
   labels:
     statusPageIO: true # Used for alert route to send to the status page
-    statusPageIOPageId: lgbxhqm818kw # The status page id you want to update (from statuspage.io)
-    statusPageIOComponentId: 818336q5bjxv # The status page component you want to update (from statuspage.io)
+    statusPageIOPageId: abc123 # The status page id you want to update (from statuspage.io)
+    statusPageIOComponentId: def456 # The status page component you want to update (from statuspage.io)
   annotations:
     statusPageIOComponentName: Checkout (Customer) # Used for incident title on status page.
     statusPageIOStatus: identified # identified|investigating|monitoring|resolved
