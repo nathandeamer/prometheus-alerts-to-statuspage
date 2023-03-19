@@ -6,44 +6,51 @@ spec:
   groups:
     - name: team1-alerts
       rules:
-        - alert: P1-Team1-Checkout-Customer-Alert1
+        - alert: Checkout-Customer-High-Error-Rate
           expr: vector(0) > 0
           labels:
             owner: team1
             namespace: default
-            severity: critical
             statusPageIO: true # Used for matchers - so needs to be a label
-            statusPageIOPageId: lgbxhqm818kw # Used for grouping - so needs to be a label
-            statusPageIOComponentId: 818336q5bjxv # Used for grouping - so needs to be a label
+            statusPageIOPageId: abc # Used for grouping - so needs to be a label
+            statusPageIOComponentId: 123 # Used for grouping - so needs to be a label
           annotations:
-            runbook: www.google.com
-            dashboard: www.bing.com
-            summary: My First Alert Summary
-            description: My First Alert Description
             statusPageIOComponentName: Checkout (Customer)
             statusPageIOStatus: identified # identified|investigating|monitoring|resolved
-            statusPageIOImpactOverride: minor  # none|maintenance|minor|major|critical
-            statusPageIOComponentStatus: partial_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
-            statusPageIOSummary: Customers are currently unable to checkout (P1-Team1-Checkout-Customer-Alert1)
+            statusPageIOImpactOverride: none  # none|maintenance|minor|major|critical
+            statusPageIOComponentStatus: degraded_performance # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statusPageIOSummary: Customer checkout has a high error rate coming from our APIs
 
     - name: team2-alerts
       rules:
-        - alert: P1-Team2-Checkout-Customer-Alert1
+        - alert: Checkout-Customer-No-Orders-Created
           expr: vector(0) > 0
           labels:
             owner: team2
             namespace: default
-            severity: critical
             statusPageIO: true # Used for matchers - so needs to be a label
-            statusPageIOPageId: lgbxhqm818kw # Used for grouping - so needs to be a label
-            statusPageIOComponentId: 818336q5bjxv # Used for grouping - so needs to be a label
+            statusPageIOPageId: abc # Used for grouping - so needs to be a label
+            statusPageIOComponentId: 123 # Used for grouping - so needs to be a label
           annotations:
-            runbook: www.google.com
-            dashboard: www.bing.com
-            summary: My First Alert Summary
-            description: My First Alert Description
+            statusPageIOComponentName: Checkout (Customer)
+            statusPageIOStatus: identified # identified|investigating|monitoring|resolved
+            statusPageIOImpactOverride: major  # none|maintenance|minor|major|critical
+            statusPageIOComponentStatus: partial_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statusPageIOSummary: Customer checkout has seen no orders being created in the last 10 minutes.  
+
+    - name: team3-alerts
+      rules:
+        - alert: Checkout-Customer-Synthetic-Test-Failure
+          expr: vector(0) > 0
+          labels:
+            owner: team3
+            namespace: default
+            statusPageIO: true # Used for matchers - so needs to be a label
+            statusPageIOPageId: abc # Used for grouping - so needs to be a label
+            statusPageIOComponentId: 123 # Used for grouping - so needs to be a label
+          annotations:
             statusPageIOComponentName: Checkout (Customer)
             statusPageIOStatus: identified # identified|investigating|monitoring|resolved
             statusPageIOImpactOverride: critical  # none|maintenance|minor|major|critical
             statusPageIOComponentStatus: major_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
-            statusPageIOSummary: Customer checkout synthetic tests are failing (P1-Team2-Checkout-Customer-Alert1)
+            statusPageIOSummary: Customer checkout synthetic tests are failing

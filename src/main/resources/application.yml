@@ -1,13 +1,9 @@
 statuspage-apiurl: https://api.statuspage.io/v1
 statuspage-apikey: NotTheRealAuth
 
-# Customer (Checkout) - Uh oh, something has gone wrong
 statuspage-incident-title-template: "{{#if (lookup this.commonAnnotations 'statusPageIOComponentName')}}{{lookup this.commonAnnotations 'statusPageIOComponentName'}} - {{/if}}Uh oh, something has gone wrong"
 
-# Don't panic, our amazing team of engineers has been alerted!
-# Firing - Customer checkout tests have failed
-# Firing - Customer can't add products to their basket
-statuspage-incident-created-body-template: "Don't panic, our amazing team of engineers has been alerted!{{#each alerts}}{{#if (lookup this.annotations 'statusPageIOSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statusPageIOSummary'}}{{/if}}{{/each}}"
+statuspage-incident-created-body-template: "Don't worry, our team of engineers are investigating!{{#each alerts}}{{#if (lookup this.annotations 'statusPageIOSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statusPageIOSummary'}}{{/if}}{{/each}}"
 
 statuspage-incident-updated-body-template: "Don't worry, our team of engineers are investigating!{{#each alerts}}{{#if (lookup this.annotations 'statusPageIOSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statusPageIOSummary'}}{{/if}}{{/each}}"
 
