@@ -1,23 +1,23 @@
 {
   "version": "4",
-  "groupKey": "{}/{}/{statusPageIO=\"true\"}:{statusPageIOComponentId=\"abc\", statusPageIOPageId=\"123\"}",
+  "groupKey": "{}/{}/{statuspage=\"true\"}:{statuspageComponentId=\"abc\", statuspagePageId=\"123\"}",
   "truncatedAlerts": 0,
   "status": "firing",
   "receiver": "default/config/statuspage-webhook",
   "groupLabels": {
-    "statusPageIOComponentId": "abc",
-    "statusPageIOPageId": "123"
+    "statuspageComponentId": "abc",
+    "statuspagePageId": "123"
   },
   "commonLabels": {
     "namespace": "default",
     "prometheus": "default/kube-prometheus-stack-prometheus",
-    "statusPageIO": "true",
-    "statusPageIOComponentId": "abc",
-    "statusPageIOPageId": "123"
+    "statuspage": "true",
+    "statuspageComponentId": "abc",
+    "statuspagePageId": "123"
   },
   "commonAnnotations": {
-    "statusPageIOComponentName": "Checkout (Customer)",
-    "statusPageIOStatus": "identified"
+    "statuspageComponentName": "Checkout (Customer)",
+    "statuspageStatus": "identified"
   },
   "externalURL": "http://kube-prometheus-stack-alertmanager.default:9093",
   "alerts": [
@@ -28,16 +28,16 @@
         "namespace": "default",
         "owner": "team1",
         "prometheus": "default/kube-prometheus-stack-prometheus",
-        "statusPageIO": "true",
-        "statusPageIOComponentId": "abc",
-        "statusPageIOPageId": "123"
+        "statuspage": "true",
+        "statuspageComponentId": "abc",
+        "statuspagePageId": "123"
       },
       "annotations": {
-        "statusPageIOComponentName": "Checkout (Customer)",
-        "statusPageIOComponentStatus": "degraded_performance",
-        "statusPageIOImpactOverride": "none",
-        "statusPageIOStatus": "identified",
-        "statusPageIOSummary": "Customer checkout has a high error rate coming from our APIs"
+        "statuspageComponentName": "Checkout (Customer)",
+        "statuspageComponentStatus": "degraded_performance",
+        "statuspageImpactOverride": "none",
+        "statuspageStatus": "identified",
+        "statuspageSummary": "Customer checkout has a high error rate coming from our APIs"
       },
       "startsAt": "2023-03-20T09:29:53.18Z",
       "endsAt": "2023-03-20T09:36:23.18Z",
@@ -51,16 +51,16 @@
         "namespace": "default",
         "owner": "team2",
         "prometheus": "default/kube-prometheus-stack-prometheus",
-        "statusPageIO": "true",
-        "statusPageIOComponentId": "abc",
-        "statusPageIOPageId": "123"
+        "statuspage": "true",
+        "statuspageComponentId": "abc",
+        "statuspagePageId": "123"
       },
       "annotations": {
-        "statusPageIOComponentName": "Checkout (Customer)",
-        "statusPageIOComponentStatus": "partial_outage",
-        "statusPageIOImpactOverride": "major",
-        "statusPageIOStatus": "identified",
-        "statusPageIOSummary": "Customer checkout has seen no orders being created in the last 10 minutes."
+        "statuspageComponentName": "Checkout (Customer)",
+        "statuspageComponentStatus": "partial_outage",
+        "statuspageImpactOverride": "major",
+        "statuspageStatus": "identified",
+        "statuspageSummary": "Customer checkout has seen no orders being created in the last 10 minutes."
       },
       "startsAt": "2023-03-20T09:32:57.84Z",
       "endsAt": "0001-01-01T00:00:00Z",
@@ -74,16 +74,16 @@
         "namespace": "default",
         "owner": "team3",
         "prometheus": "default/kube-prometheus-stack-prometheus",
-        "statusPageIO": "true",
-        "statusPageIOComponentId": "abc",
-        "statusPageIOPageId": "123"
+        "statuspage": "true",
+        "statuspageComponentId": "abc",
+        "statuspagePageId": "123"
       },
       "annotations": {
-        "statusPageIOComponentName": "Checkout (Customer)",
-        "statusPageIOComponentStatus": "major_outage",
-        "statusPageIOImpactOverride": "critical",
-        "statusPageIOStatus": "identified",
-        "statusPageIOSummary": "Customer checkout synthetic tests are failing"
+        "statuspageComponentName": "Checkout (Customer)",
+        "statuspageComponentStatus": "major_outage",
+        "statuspageImpactOverride": "critical",
+        "statuspageStatus": "identified",
+        "statuspageSummary": "Customer checkout synthetic tests are failing"
       },
       "startsAt": "2023-03-20T09:35:05.922Z",
       "endsAt": "0001-01-01T00:00:00Z",

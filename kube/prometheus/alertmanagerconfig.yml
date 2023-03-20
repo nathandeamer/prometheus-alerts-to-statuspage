@@ -16,12 +16,12 @@ spec:
             value: team1
         continue: true
       - receiver: statuspage-webhook
-        groupBy: ['statusPageIOPageId', 'statusPageIOComponentId']
+        groupBy: ['statuspagePageId', 'statuspageComponentId']
         groupWait: 30s # Initial wait to group any other alerts which may trigger for the same group. (Default: 30s)
         groupInterval: 1m # Don't send alert about new alerts in group for x (Default: 5m)
         repeatInterval: 4h # Only resend the alert after x (Default: 4h)
         matchers:
-          - name: statusPageIO
+          - name: statuspage
             value: "true"
         continue: true
   receivers:

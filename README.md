@@ -29,36 +29,36 @@ If you want to override any of the handlebar templates (see [4. Status page: Con
 **Defaults:** See [application.yml](src/main/resources/application.yml)
 
 ### 2. Prometheus alerts
-Configure your prometheus alerts with the `statuePageIO` labels and annotations
+Configure your prometheus alerts with the `statuspage` labels and annotations
 
 ```yaml
 - alert: [Alert Name]
   expr: [Alert Expression]
   labels:
-    statusPageIO: true # Used for alert route to send to the statuspage
-    statusPageIOPageId: abc123 # The statuspage id you want to update (from statuspage.io)
-    statusPageIOComponentId: def456 # The statuspage component you want to update (from statuspage.io)
+    statuspage: true # Used for alert route to send to the statuspage
+    statuspagePageId: abc123 # The statuspage id you want to update (from statuspage)
+    statuspageComponentId: def456 # The statuspage component you want to update (from statuspage)
   annotations:
-    statusPageIOComponentName: [Component Name] # Used in the incident title on statuspage.
-    statusPageIOStatus: identified # identified|investigating|monitoring|resolved
-    statusPageIOImpactOverride: critial  # none|maintenance|minor|major|critical
-    statusPageIOComponentStatus: major_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
-    statusPageIOSummary: [Summary for statuspage] # Used for display text on statuspage
+    statuspageComponentName: [Component Name] # Used in the incident title on statuspage.
+    statuspageStatus: identified # identified|investigating|monitoring|resolved
+    statuspageImpactOverride: critial  # none|maintenance|minor|major|critical
+    statuspageComponentStatus: major_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+    statuspageSummary: [Summary for statuspage] # Used for display text on statuspage
 ```
 Hopefully, all the labels and annotations are self-explanatory.  More information on the values can be found in the [Atlassian Statuspage documentation](https://developer.statuspage.io/).
 
 --- Note: [Prometheus Operator format](https://github.com/prometheus-operator/prometheus-operator).
 
 ### 3. AlertManager configuration
-Configure your Alertmanager webhook route to group by `statusPageIOPageId` and `statusPageIOComponentId`.
+Configure your Alertmanager webhook route to group by `statuspagePageId` and `statuspageComponentId`.
 ```yaml
 - receiver: statuspage-webhook
-  groupBy: ['statusPageIOPageId', 'statusPageIOComponentId']
+  groupBy: ['statuspagePageId', 'statuspageComponentId']
   groupWait: 30s # Initial wait to group any other alerts which may trigger for the same group. (Default: 30s)
   groupInterval: 1m # Don't send alert about new alerts added to the group for the interval(Default: 5m)
   repeatInterval: 4h # Only resend the alert after x (Default: 4h)
   matchers:
-    - name: statusPageIO
+    - name: statuspage
       value: "true"
 ...
 - name: statuspage-webhook
@@ -71,10 +71,10 @@ Configure your Alertmanager webhook route to group by `statusPageIOPageId` and `
 The project uses [handlebars.java](https://github.com/jknack/handlebars.java) for templating.  
 The [AlertWrapper](src/main/java/com/nathandeamer/prometheustostatuspage/alertmanager/dto/AlertWrapper.java) class is passed into the templates for referencing. 
 
-e.g. for the Statuspage incident title we prepend with the `statusPageIOComponentName` annotation from the alert
+e.g. for the Statuspage incident title we prepend with the `statuspageComponentName` annotation from the alert
 ```java
-{{#if (lookup this.commonAnnotations 'statusPageIOComponentName')}}
-    {{lookup this.commonAnnotations 'statusPageIOComponentName'}} -
+{{#if (lookup this.commonAnnotations 'statuspageComponentName')}}
+    {{lookup this.commonAnnotations 'statuspageComponentName'}} -
 {{/if}}Uh oh, something has gone wrong
 ```
 **Output**: Checkout (Customer) - uh oh, something has gone wrong
@@ -105,23 +105,23 @@ Following the [example](#example) scenario above we have 3 alerts configured:
 
 **Alert 1:** Customer checkout has a high error rate coming from our APIs
 ```yaml
-statusPageIOImpactOverride: none
-statusPageIOComponentStatus: degraded_performance
-statusPageIOSummary: Customer checkout has a high error rate coming from our APIs
+statuspageImpactOverride: none
+statuspageComponentStatus: degraded_performance
+statuspageSummary: Customer checkout has a high error rate coming from our APIs
 ```
 
 **Alert 2:** Customer checkout has seen no orders being created in the last 10 minutes.
 ```yaml
-statusPageIOImpactOverride: major
-statusPageIOComponentStatus: partial_outage
-statusPageIOSummary: Customer checkout has seen no orders being created in the last 10 minutes.=
+statuspageImpactOverride: major
+statuspageComponentStatus: partial_outage
+statuspageSummary: Customer checkout has seen no orders being created in the last 10 minutes.=
 ```
 
 **Alert 3:** Customer checkout synthetic tests are failing
 ```yaml
-statusPageIOImpactOverride: critical
-statusPageIOComponentStatus: major_outage
-statusPageIOSummary: Customer checkout synthetic tests are failing
+statuspageImpactOverride: critical
+statuspageComponentStatus: major_outage
+statuspageSummary: Customer checkout synthetic tests are failing
 ```
 
 See [prometheusrules.yml](kube/prometheus/prometheusrules.yml) for complete alerts.

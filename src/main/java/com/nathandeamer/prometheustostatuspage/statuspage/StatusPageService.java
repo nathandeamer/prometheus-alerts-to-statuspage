@@ -24,11 +24,11 @@ import java.util.stream.Collectors;
 @Service
 public class StatusPageService {
 
-    public static final String STATUS_PAGE_IO_PAGE_ID = "statusPageIOPageId";
-    public static final String STATUS_PAGE_IO_COMPONENT_ID = "statusPageIOComponentId";
-    public static final String STATUS_PAGE_IO_STATUS = "statusPageIOStatus";
-    public static final String STATUS_PAGE_IO_IMPACT_OVERRIDE = "statusPageIOImpactOverride";
-    public static final String STATUS_PAGE_IO_COMPONENT_STATUS = "statusPageIOComponentStatus";
+    public static final String STATUSPAGE_PAGE_ID = "statuspagePageId";
+    public static final String STATUSPAGE_COMPONENT_ID = "statuspageComponentId";
+    public static final String STATUSPAGE_STATUS = "statuspageStatus";
+    public static final String STATUSPAGE_IMPACT_OVERRIDE = "statuspageImpactOverride";
+    public static final String STATUSPAGE_COMPONENT_STATUS = "statuspageComponentStatus";
 
     private final StatusPageClient statusPageClient;
     private final Template statusPageIncidentTitleTemplate;
@@ -52,8 +52,8 @@ public class StatusPageService {
     @SneakyThrows
     public String createIncident(AlertWrapper alertWrapper) {
         log.debug("Create incident: {}", alertWrapper);
-        String pageId = alertWrapper.getCommonLabels().get(STATUS_PAGE_IO_PAGE_ID);
-        String componentId = alertWrapper.getCommonLabels().get(STATUS_PAGE_IO_COMPONENT_ID);
+        String pageId = alertWrapper.getCommonLabels().get(STATUSPAGE_PAGE_ID);
+        String componentId = alertWrapper.getCommonLabels().get(STATUSPAGE_COMPONENT_ID);
 
         return statusPageClient.createIncident(pageId, IncidentRequestWrapper.builder()
                 .incidentRequest(IncidentRequest.builder()
@@ -71,7 +71,7 @@ public class StatusPageService {
     public void updateIncident(IncidentResponse incident, AlertWrapper alertWrapper) {
         log.debug("Update incident: {}", alertWrapper);
 
-        String componentId = alertWrapper.getCommonLabels().get(STATUS_PAGE_IO_COMPONENT_ID);
+        String componentId = alertWrapper.getCommonLabels().get(STATUSPAGE_COMPONENT_ID);
         statusPageClient.updateIncident(incident.getPageId(), incident.getId() ,
                 IncidentRequestWrapper.builder()
                         .incidentRequest(IncidentRequest.builder()
@@ -88,7 +88,7 @@ public class StatusPageService {
     public void resolveIncident(IncidentResponse incident, AlertWrapper alertWrapper) {
         log.debug("Resolve incident: {}", alertWrapper);
 
-        String componentId = alertWrapper.getCommonLabels().get(STATUS_PAGE_IO_COMPONENT_ID);
+        String componentId = alertWrapper.getCommonLabels().get(STATUSPAGE_COMPONENT_ID);
         statusPageClient.updateIncident(incident.getPageId(), incident.getId() ,
                 IncidentRequestWrapper.builder()
                         .incidentRequest(IncidentRequest.builder()
@@ -102,8 +102,8 @@ public class StatusPageService {
     }
 
     public List<IncidentResponse> getUnresolvedIncidentsForAlertWrapper(AlertWrapper alertWrapper) {
-        String pageId = alertWrapper.getCommonLabels().get(STATUS_PAGE_IO_PAGE_ID);
-        String componentId = alertWrapper.getCommonLabels().get(STATUS_PAGE_IO_COMPONENT_ID);
+        String pageId = alertWrapper.getCommonLabels().get(STATUSPAGE_PAGE_ID);
+        String componentId = alertWrapper.getCommonLabels().get(STATUSPAGE_COMPONENT_ID);
 
         return statusPageClient.getUnresolvedIncidents(pageId).stream()
                 .filter(unresolvedIncident -> unresolvedIncident.getComponents()
@@ -116,7 +116,7 @@ public class StatusPageService {
     private Status getMaxStatus(AlertWrapper alertWrapper) {
         return alertWrapper.getAlerts()
                 .stream()
-                .map(r -> r.getAnnotations().getOrDefault(STATUS_PAGE_IO_STATUS, Status.IDENTIFIED.name()))
+                .map(r -> r.getAnnotations().getOrDefault(STATUSPAGE_STATUS, Status.IDENTIFIED.name()))
                 .map(r -> Status.valueOf(r.toUpperCase()))
                 .max(Comparator.comparing(Enum::ordinal))
                 .orElse(Status.IDENTIFIED);
@@ -125,7 +125,7 @@ public class StatusPageService {
     private ImpactOverride getMaxImpactOverride(AlertWrapper alertWrapper) {
         return alertWrapper.getAlerts()
                 .stream()
-                .map(r -> r.getAnnotations().getOrDefault(STATUS_PAGE_IO_IMPACT_OVERRIDE, ImpactOverride.NONE.name()))
+                .map(r -> r.getAnnotations().getOrDefault(STATUSPAGE_IMPACT_OVERRIDE, ImpactOverride.NONE.name()))
                 .map(r -> ImpactOverride.valueOf(r.toUpperCase()))
                 .max(Comparator.comparing(Enum::ordinal))
                 .orElse(ImpactOverride.NONE);
@@ -135,7 +135,7 @@ public class StatusPageService {
         return alertWrapper.getAlerts()
                 .stream()
                 .filter(r -> r.getStatus() == com.nathandeamer.prometheustostatuspage.alertmanager.dto.Status.FIRING)
-                .map(r -> r.getAnnotations().getOrDefault(STATUS_PAGE_IO_COMPONENT_STATUS, ComponentStatus.NONE.getValue()))
+                .map(r -> r.getAnnotations().getOrDefault(STATUSPAGE_COMPONENT_STATUS, ComponentStatus.NONE.getValue()))
                 .map(r -> ComponentStatus.valueOf(r.toUpperCase()))
                 .max(Comparator.comparing(Enum::ordinal))
                 .orElse(ComponentStatus.NONE);

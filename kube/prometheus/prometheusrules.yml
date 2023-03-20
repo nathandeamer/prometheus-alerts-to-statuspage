@@ -11,15 +11,15 @@ spec:
           labels:
             owner: team1
             namespace: default
-            statusPageIO: true # Used for matchers - so needs to be a label
-            statusPageIOPageId: abc # Used for grouping - so needs to be a label
-            statusPageIOComponentId: 123 # Used for grouping - so needs to be a label
+            statuspage: true # Used for matchers - so needs to be a label
+            statuspagePageId: lgbxhqm818kw # Used for grouping - so needs to be a label
+            statuspageComponentId: 818336q5bjxv # Used for grouping - so needs to be a label
           annotations:
-            statusPageIOComponentName: Checkout (Customer)
-            statusPageIOStatus: identified # identified|investigating|monitoring|resolved
-            statusPageIOImpactOverride: none  # none|maintenance|minor|major|critical
-            statusPageIOComponentStatus: degraded_performance # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
-            statusPageIOSummary: Customer checkout has a high error rate coming from our APIs
+            statuspageComponentName: Checkout (Customer)
+            statuspageStatus: identified # identified|investigating|monitoring|resolved
+            statuspageImpactOverride: none  # none|maintenance|minor|major|critical
+            statuspageComponentStatus: degraded_performance # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statuspageSummary: Customer checkout has a high error rate coming from our APIs
 
     - name: team2-alerts
       rules:
@@ -28,15 +28,15 @@ spec:
           labels:
             owner: team2
             namespace: default
-            statusPageIO: true # Used for matchers - so needs to be a label
-            statusPageIOPageId: abc # Used for grouping - so needs to be a label
-            statusPageIOComponentId: 123 # Used for grouping - so needs to be a label
+            statuspage: true # Used for matchers - so needs to be a label
+            statuspagePageId: lgbxhqm818kw # Used for grouping - so needs to be a label
+            statuspageComponentId: 818336q5bjxv # Used for grouping - so needs to be a label
           annotations:
-            statusPageIOComponentName: Checkout (Customer)
-            statusPageIOStatus: identified # identified|investigating|monitoring|resolved
-            statusPageIOImpactOverride: major  # none|maintenance|minor|major|critical
-            statusPageIOComponentStatus: partial_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
-            statusPageIOSummary: Customer checkout has seen no orders being created in the last 10 minutes.  
+            statuspageComponentName: Checkout (Customer)
+            statuspageStatus: identified # identified|investigating|monitoring|resolved
+            statuspageImpactOverride: major  # none|maintenance|minor|major|critical
+            statuspageComponentStatus: partial_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statuspageSummary: Customer checkout has seen no orders being created in the last 10 minutes.
 
     - name: team3-alerts
       rules:
@@ -45,12 +45,12 @@ spec:
           labels:
             owner: team3
             namespace: default
-            statusPageIO: true # Used for matchers - so needs to be a label
-            statusPageIOPageId: abc # Used for grouping - so needs to be a label
-            statusPageIOComponentId: 123 # Used for grouping - so needs to be a label
+            statuspageO: true # Used for matchers - so needs to be a label
+            statuspagePageId: lgbxhqm818kw # Used for grouping - so needs to be a label
+            statuspageComponentId: 818336q5bjxv # Used for grouping - so needs to be a label
           annotations:
-            statusPageIOComponentName: Checkout (Customer)
-            statusPageIOStatus: identified # identified|investigating|monitoring|resolved
-            statusPageIOImpactOverride: critical  # none|maintenance|minor|major|critical
-            statusPageIOComponentStatus: major_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
-            statusPageIOSummary: Customer checkout synthetic tests are failing
+            statuspageComponentName: Checkout (Customer)
+            statuspageStatus: identified # identified|investigating|monitoring|resolved
+            statuspageImpactOverride: critical  # none|maintenance|minor|major|critical
+            statuspageComponentStatus: major_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statuspageSummary: Customer checkout synthetic tests are failing

@@ -1,13 +1,13 @@
 statuspage-apiurl: https://api.statuspage.io/v1
 statuspage-apikey: NotTheRealAuth
 
-statuspage-incident-title-template: "{{#if (lookup this.commonAnnotations 'statusPageIOComponentName')}}{{lookup this.commonAnnotations 'statusPageIOComponentName'}} - {{/if}}Uh oh, something has gone wrong"
+statuspage-incident-title-template: "{{#if (lookup this.commonAnnotations 'statuspageComponentName')}}{{lookup this.commonAnnotations 'statuspageComponentName'}} - {{/if}}Uh oh, something has gone wrong"
 
-statuspage-incident-created-body-template: "Don't worry, our team of engineers are investigating!{{#each alerts}}{{#if (lookup this.annotations 'statusPageIOSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statusPageIOSummary'}}{{/if}}{{/each}}"
+statuspage-incident-created-body-template: "Don't worry, our team of engineers are investigating!{{#each alerts}}{{#if (lookup this.annotations 'statuspageSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statuspageSummary'}}{{/if}}{{/each}}"
 
-statuspage-incident-updated-body-template: "Don't worry, our team of engineers are investigating!{{#each alerts}}{{#if (lookup this.annotations 'statusPageIOSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statusPageIOSummary'}}{{/if}}{{/each}}"
+statuspage-incident-updated-body-template: "Don't worry, our team of engineers are investigating!{{#each alerts}}{{#if (lookup this.annotations 'statuspageSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statuspageSummary'}}{{/if}}{{/each}}"
 
-statuspage-incident-resolved-body-template: "Our engineers have fixed the problem. They will be doing a postmortem within the next 48 hours.{{#each alerts}}{{#if (lookup this.annotations 'statusPageIOSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statusPageIOSummary'}}{{/if}}{{/each}}"
+statuspage-incident-resolved-body-template: "Our engineers have fixed the problem. They will be doing a postmortem within the next 48 hours.{{#each alerts}}{{#if (lookup this.annotations 'statuspageSummary')}}<br><b {{#if (eq status.name 'FIRING')}}style='color: red'{{/if}}{{#if (eq status.name 'RESOLVED')}}style='color: green'{{/if}}>{{substring status 0 1}}{{lower (substring status 1)}}</b> - {{lookup this.annotations 'statuspageSummary'}}{{/if}}{{/each}}"
 
 spring:
   cloud:
