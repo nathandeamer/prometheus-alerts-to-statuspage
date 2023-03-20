@@ -1,3 +1,5 @@
+[![Build and Push Docker Image](https://github.com/nathandeamer/prometheus-alerts-to-statuspage/actions/workflows/main.yml/badge.svg)](https://github.com/nathandeamer/prometheus-alerts-to-statuspage/actions/workflows/main.yml)
+
 # Prometheus Alerts to Atlassian Statuspage
 Do you have multiple alerts firing at once from Prometheus Alertmanager that only effect one part of your system? And you only want to report one incident on a Atlassian Statuspage?  Then give this custom solution a go!
 
