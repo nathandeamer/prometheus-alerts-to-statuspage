@@ -22,6 +22,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '17'
+        distribution: 'liberica'
 
     - name: Build Docker image
       run: ./gradlew bootBuildImage --imageName=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage:${{ github.sha }} --publish
