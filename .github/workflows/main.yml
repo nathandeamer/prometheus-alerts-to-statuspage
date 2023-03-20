@@ -32,10 +32,12 @@ jobs:
         docker tag ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage:${{ github.sha }}
         docker tag ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage:latest
 
-    - name: Push Docker image
+    - name: Login to Docker
       uses: docker/login-action@v2
       with:
         registry: ${{ env.DOCKER_REGISTRY }}
         username: ${{ env.DOCKER_USERNAME }}
         password: ${{ env.DOCKER_PASSWORD }}
-    - run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage --all-tags
+
+    - name: Push all tags
+      run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage --all-tags
