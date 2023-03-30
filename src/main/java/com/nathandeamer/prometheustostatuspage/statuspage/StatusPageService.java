@@ -2,6 +2,8 @@ package com.nathandeamer.prometheustostatuspage.statuspage;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.helper.ConditionalHelpers;
+import com.github.jknack.handlebars.helper.StringHelpers;
 import com.nathandeamer.prometheustostatuspage.alertmanager.dto.AlertWrapper;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.ComponentStatus;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.ImpactOverride;
@@ -41,7 +43,13 @@ public class StatusPageService {
                              @Value("${statuspage-incident-created-body-template}") String statusPageIncidentCreatedBodyTemplate,
                              @Value("${statuspage-incident-updated-body-template}") String statusPageIncidentUpdatedBodyTemplate,
                              @Value("${statuspage-incident-resolved-body-template}") String statusPageIncidentResolvedBodyTemplate,
-                             StatusPageClient statusPageClient, Handlebars handlebars) {
+                             StatusPageClient statusPageClient) {
+
+        Handlebars handlebars =  new Handlebars()
+                .registerHelper("eq", ConditionalHelpers.eq)
+                .registerHelper("lower", StringHelpers.lower)
+                .registerHelper("substring", StringHelpers.substring);
+
         this.statusPageClient = statusPageClient;
         this.statusPageIncidentTitleTemplate = handlebars.compileInline(statusPageIncidentTitleTemplate);
         this.statusPageIncidentCreatedBodyTemplate = handlebars.compileInline(statusPageIncidentCreatedBodyTemplate);
