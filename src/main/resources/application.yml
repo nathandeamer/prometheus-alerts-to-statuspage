@@ -14,3 +14,13 @@ spring:
     openfeign:
       okhttp:
         enabled: true # Use okhttp for PATCH support
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+  endpoint:
+    health:
+      probes:
+        enabled: true

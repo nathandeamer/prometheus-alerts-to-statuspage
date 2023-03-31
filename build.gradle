@@ -32,6 +32,7 @@ dependencyManagement {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.github.openfeign:feign-okhttp:12.2'
 
 	implementation 'com.github.jknack:handlebars:4.3.1'
