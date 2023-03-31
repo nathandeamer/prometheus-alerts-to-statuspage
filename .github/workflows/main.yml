@@ -56,5 +56,5 @@ jobs:
     - name: Helm package
       run: helm package helm/
 
-     - name: Helm push
-       run: helm push prometheus-alerts-to-statuspage-0.1.${{ github.run_number }}.tgz oci://registry-1.docker.io/nathandeamer
+    - name: Helm push
+      run: helm push prometheus-alerts-to-statuspage-0.1.${{ github.run_number }}.tgz oci://registry-1.docker.io/nathandeamer
