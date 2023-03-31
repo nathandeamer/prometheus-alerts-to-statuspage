@@ -148,14 +148,25 @@ See [prometheusrules.yml](kube/prometheus/prometheusrules.yml) for complete aler
 https://nathandeamer.statuspage.io/incidents/7fklpbbszkzm
 
 
-## Local usage
+## Local usage (k8s)
+### Option 1:
 1. Local k8s cluster
 2. Install [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack): `helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack -f kube/prometheus/values.yml`
 3. Apply the prometheus rules and alertmanager config `kubectl apply -f kube/prometheus/alertmanagerconfig.yml kube/prometheus/prometheusrules.yml`
 4. Build the image: `./gradlew bootBuildImage --imageName=nathandeamer/prometheus-alerts-to-statuspage`
-5. Create a secret with your Atliassian Statuspage api key: `kubectl create secret generic statuspage --from-literal=apikey=[your-api-key]`
+5. Create a secret with your Atliassian Statuspage api key: `kubectl create secret generic prometheus-alerts-to-statuspage --from-literal=apikey=[your-api-key]`
 6. Deploy the prometheus service and deployment `kubectl apply -f kube/service.yml kube/deployment.yml`
 7. Edit the sample alert `kubectl edit prometheusrules.monitoring.coreos.com alerts` by changing to `vector(1) > 0` to make the alert(s) fire.
+
+###Option 2 (Helm):
+1. Follow steps 1-3 from Option 1.
+2. Use the provided helm template 
+```shell
+cd helm
+helm install prometheus-alerts-to-statuspage --set statuspage.apikey="YOUR_API_KEY_HERE" .
+```
+3. Skip to step 7 from Option 1.
+
 
 ## Implementation details
 ```mermaid
@@ -186,4 +197,10 @@ sequenceDiagram
     end
 
     Prometheus Alerts to Statuspage -->>- Prometheus Alertmanager: OK
+```
+
+## Helm
+```shell
+helm package .
+helm push prometheus-alerts-to-statuspage-0.1.0.tgz oci://registry-1.docker.io/nathandeamer
 ```
