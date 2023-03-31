@@ -42,7 +42,19 @@ jobs:
     - name: Push all tags
       run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage --all-tags
 
-    - name: Update Chart versions
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+      id: install
+
+    - name: Set Chart versions
       uses: mikefarah/yq@master
       with:
-        cmd: yq -i '.version = "0.1.${{ github.run_number }}" | .appVersion = "${{ github.sha }}"' Chart.yaml
+        cmd: yq -i '.version = "0.1.${{ github.run_number }}" | .appVersion = "${{ github.sha }}"' helm/Chart.yaml
+
+    - name: Helm package
+      run: helm package helm/
+
+     - name: Helm push
+       run: helm push prometheus-alerts-to-statuspage-0.1.${{ github.run_number }}.tgz oci://registry-1.docker.io/nathandeamer
