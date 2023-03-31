@@ -200,8 +200,7 @@ sequenceDiagram
 ```
 
 ## Helm
-Will auto create your secret.
 ```shell
-cd helm
-helm install prometheus-alerts-to-statuspage --set statuspage.apikey="YOUR_API_KEY_HERE" .
+helm package .
+helm push prometheus-alerts-to-statuspage-0.1.0.tgz oci://registry-1.docker.io/nathandeamer
 ```

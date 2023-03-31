@@ -41,3 +41,8 @@ jobs:
 
     - name: Push all tags
       run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage --all-tags
+
+    - name: Update Chart versions
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq -i '.version = "0.1.${{ github.run_number }}" | .appVersion = "${{ github.sha }}"' Chart.yaml
