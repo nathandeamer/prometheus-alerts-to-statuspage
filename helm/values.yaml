@@ -83,7 +83,7 @@ probes:
     path: /actuator/health/liveness
     port: http
   readiness:
-    path: /actuator/health/liveness
+    path: /actuator/health/readiness
     port: http
 
 statuspage:
