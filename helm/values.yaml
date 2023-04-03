@@ -86,5 +86,6 @@ probes:
     path: /actuator/health/readiness
     port: http
 
-statuspage:
-  apikey: REPLACE_ME
+# Set your statuepage.apikey when installing helm chart
+# statuspage:
+#   apikey: 
