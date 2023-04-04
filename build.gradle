@@ -35,6 +35,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.github.openfeign:feign-okhttp:12.2'
 
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 	implementation 'com.github.jknack:handlebars:4.3.1'
 
 	compileOnly 'org.projectlombok:lombok'
