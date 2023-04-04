@@ -89,6 +89,13 @@ probes:
     path: /actuator/health/readiness
     port: http
 
+lifecycle:
+  preStop:
+    exec:
+      command: ["sh", "-c", "sleep 10"]
+
+terminationGracePeriodSeconds: 30
+
 # Set your statuepage.apikey when installing helm chart
 # statuspage:
 #   apikey:
