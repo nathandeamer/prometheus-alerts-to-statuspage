@@ -53,7 +53,7 @@ spec:
                   key: apikey
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          lifectcle:
+          lifecycle:
             {{- toYaml .Values.lifecycle | nindent 12 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- with .Values.nodeSelector }}
