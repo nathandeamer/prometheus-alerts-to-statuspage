@@ -17,7 +17,7 @@ public class WebhookController {
 
     @PostMapping("/alert")
     public void alert(@RequestBody AlertWrapper alert) {
-        log.debug("{}", alert);
+        log.info("{}", alert);
         prometheusToStatusPageService.alert(alert);
     }
 

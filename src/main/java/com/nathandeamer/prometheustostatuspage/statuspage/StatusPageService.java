@@ -59,7 +59,7 @@ public class StatusPageService {
 
     @SneakyThrows
     public String createIncident(AlertWrapper alertWrapper) {
-        log.debug("Create incident: {}", alertWrapper);
+        log.info("Create incident: {}", alertWrapper);
         String pageId = alertWrapper.getCommonLabels().get(STATUSPAGE_PAGE_ID);
         String componentId = alertWrapper.getCommonLabels().get(STATUSPAGE_COMPONENT_ID);
 
@@ -77,7 +77,7 @@ public class StatusPageService {
 
     @SneakyThrows
     public void updateIncident(IncidentResponse incident, AlertWrapper alertWrapper) {
-        log.debug("Update incident: {}", alertWrapper);
+        log.info("Update incident: {}", alertWrapper);
 
         String componentId = alertWrapper.getCommonLabels().get(STATUSPAGE_COMPONENT_ID);
         statusPageClient.updateIncident(incident.getPageId(), incident.getId() ,
@@ -94,7 +94,7 @@ public class StatusPageService {
 
     @SneakyThrows
     public void resolveIncident(IncidentResponse incident, AlertWrapper alertWrapper) {
-        log.debug("Resolve incident: {}", alertWrapper);
+        log.info("Resolve incident: {}", alertWrapper);
 
         String componentId = alertWrapper.getCommonLabels().get(STATUSPAGE_COMPONENT_ID);
         statusPageClient.updateIncident(incident.getPageId(), incident.getId() ,
