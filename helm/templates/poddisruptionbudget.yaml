@@ -7,7 +7,7 @@ apiVersion: policy/v1beta1
 {{- end }}
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "deployment.fullname" . }}-pdb
+  name: {{ include "prometheus-alerts-to-statuspage.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
 spec:
@@ -19,5 +19,5 @@ maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
   {{- end }}
 selector:
   matchLabels:
-    app.kubernetes.io/name: {{ include "deployment.name" . }}
+    app.kubernetes.io/name: {{ include "prometheus-alerts-to-statuspage.fullname" . }}
   {{- end }}
