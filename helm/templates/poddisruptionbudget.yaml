@@ -9,7 +9,7 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "prometheus-alerts-to-statuspage.fullname" . }}
   labels:
-    { { - include "prometheus-alerts-to-statuspage.labels" . | nindent 4 } }
+    {{ - include "prometheus-alerts-to-statuspage.labels" . | nindent 4 }}
 spec:
   {{- if .Values.podDisruptionBudget.minAvailable }}
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
