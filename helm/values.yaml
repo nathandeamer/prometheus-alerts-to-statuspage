@@ -94,7 +94,7 @@ lifecycle:
     exec:
       command: ["sh", "-c", "sleep 10"]
 
-terminationGracePeriodSeconds: 45 # Needs to be greated than the sum of the preStop command + spring.lifecycle.timeout-per-shutdown-phase (https://www.thoughtworks.com/en-gb/insights/blog/cloud/shutdown-services-kubernetes)
+terminationGracePeriodSeconds: 45 # Needs to be greater than the sum of the preStop command + spring.lifecycle.timeout-per-shutdown-phase (https://www.thoughtworks.com/en-gb/insights/blog/cloud/shutdown-services-kubernetes)
 
 podDisruptionBudget:
   enabled: false
