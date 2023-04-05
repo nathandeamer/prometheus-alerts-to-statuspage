@@ -53,6 +53,9 @@ jobs:
       with:
         cmd: yq -i '.version = "0.1.${{ github.run_number }}" | .appVersion = "${{ github.sha }}"' helm/Chart.yaml
 
+    - name: Helm lint
+      run: helm lint helm/
+
     - name: Helm package
       run: helm package helm/
 
