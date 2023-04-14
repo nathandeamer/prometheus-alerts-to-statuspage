@@ -24,6 +24,9 @@ jobs:
         java-version: '17'
         distribution: 'liberica'
 
+    - name: Run nativeTests # Not included in the bootBuildImage step.
+      run: ./gradlew nativeTest
+
     - name: Build Docker image
       run: ./gradlew bootBuildImage --imageName=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/prometheus-alerts-to-statuspage
     
