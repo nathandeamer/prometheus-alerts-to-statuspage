@@ -10,11 +10,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class HandlebarsHintsTest {
 
     @Test
-    void shouldRegisterHints() throws ClassNotFoundException {
+    void shouldRegisterHints() throws NoSuchMethodException {
         RuntimeHints hints = new RuntimeHints();
         new HandlebarsHints().registerHints(hints, getClass().getClassLoader());
         assertThat(RuntimeHintsPredicates.resource().forResource("helpers.nashorn.js")).accepts(hints);
-        assertThat(RuntimeHintsPredicates.reflection().onMethod(Status.class.getName(), "name")).accepts(hints);
+        assertThat(RuntimeHintsPredicates.reflection().onMethod(Status.class.getMethod("name"))).accepts(hints);
     }
 
 }

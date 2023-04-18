@@ -5,6 +5,7 @@ import com.nathandeamer.prometheustostatuspage.alertmanager.dto.Status;
 import com.nathandeamer.prometheustostatuspage.statuspage.StatusPageService;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.IncidentResponse;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@DisabledInNativeImage // Known limitation with mockito when running as native tests. https://github.com/spring-projects/spring-boot/issues/32195
 public class PrometheusToStatusPageServiceTest {
 
     private final StatusPageService mockStatusPageService = mock(StatusPageService.class);

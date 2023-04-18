@@ -1,9 +1,9 @@
 package com.nathandeamer.prometheustostatuspage.statuspage;
 
-import com.github.jknack.handlebars.Handlebars;
 import com.nathandeamer.prometheustostatuspage.alertmanager.dto.Alert;
 import com.nathandeamer.prometheustostatuspage.alertmanager.dto.AlertWrapper;
 import com.nathandeamer.prometheustostatuspage.alertmanager.dto.Status;
+import com.nathandeamer.prometheustostatuspage.statuspage.configuration.HandlebarsConfiguration;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.ComponentStatus;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.ImpactOverride;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.IncidentComponentResponse;
@@ -13,6 +13,7 @@ import com.nathandeamer.prometheustostatuspage.statuspage.dto.IncidentResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@DisabledInNativeImage // Known limitation with mockito when running as native tests. https://github.com/spring-projects/spring-boot/issues/32195
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class StatusPageServiceTest {
 
@@ -40,7 +42,7 @@ public class StatusPageServiceTest {
     private static final String STATUS_PAGE_INCIDENT_RESOLVED_BODY_TEMPLATE = "resolved body";
 
     // Shared Test data
-        private final String statuspagePageIdValue = "statuspagePageId";
+    private final String statuspagePageIdValue = "statuspagePageId";
     private final String statuspageComponentIdValue = "statuspageComponentId";
     private final String statuspageIncidentIdValue = "statuspageIncidentId";
     private final String statuspageComponentNameValue = "Status Page Component Name";
@@ -52,7 +54,7 @@ public class StatusPageServiceTest {
 
     @BeforeAll
     public void setup() {
-        underTest = new StatusPageService(STATUS_PAGE_INCIDENT_TITLE_TEMPLATE, STATUS_PAGE_INCIDENT_CREATED_BODY_TEMPLATE, STATUS_PAGE_INCIDENT_UPDATED_BODY_TEMPLATE, STATUS_PAGE_INCIDENT_RESOLVED_BODY_TEMPLATE, mockStatusPageClient);
+        underTest = new StatusPageService(STATUS_PAGE_INCIDENT_TITLE_TEMPLATE, STATUS_PAGE_INCIDENT_CREATED_BODY_TEMPLATE, STATUS_PAGE_INCIDENT_UPDATED_BODY_TEMPLATE, STATUS_PAGE_INCIDENT_RESOLVED_BODY_TEMPLATE, mockStatusPageClient, new HandlebarsConfiguration().handlebars());
     }
 
     @Test

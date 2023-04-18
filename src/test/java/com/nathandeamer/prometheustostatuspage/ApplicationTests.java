@@ -12,6 +12,7 @@ import com.nathandeamer.prometheustostatuspage.statuspage.dto.IncidentRequest;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.IncidentRequestWrapper;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.IncidentResponse;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisabledInNativeImage // Known limitation with mockito when running as native tests. https://github.com/spring-projects/spring-boot/issues/32195
 @SpringBootTest
 @AutoConfigureMockMvc
 class ApplicationTests {
