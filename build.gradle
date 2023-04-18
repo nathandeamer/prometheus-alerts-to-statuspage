@@ -37,12 +37,22 @@ dependencies {
 
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 
-	implementation 'com.github.jknack:handlebars:4.3.1'
+	implementation 'com.github.jknack:handlebars:5.0.0-SNAPSHOT'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	testImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
+	testImplementation "org.testcontainers:testcontainers:1.18.0"
+	testImplementation "org.testcontainers:junit-jupiter:1.18.0"
+
+	// TODO: Try this.
+	// Or this: https://github.com/maciejwalkowiak/wiremock-spring-boot
+	// Otherwise fallback to running wiremock as a mockserver or standalone docker - but will make it harder to introspect the results?
+	//testImplementation "com.github.tomakehurst:wiremock-standalone:3.0.0-beta-7" // https://github.com/abhisheksr01/spring-boot-microservice-best-practices/blob/60fe1bcc22302c54d36c4970720978e69c8cc90a/src/test/java/com/uk/companieshouse/e2e/WireMockService.java
+
 }
 
 tasks.named('test') {

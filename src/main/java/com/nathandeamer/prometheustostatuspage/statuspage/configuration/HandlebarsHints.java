@@ -11,7 +11,7 @@ public class HandlebarsHints implements RuntimeHintsRegistrar {
     @SneakyThrows
     @Override
     public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-        hints.resources().registerPattern("helpers.nashorn.js");
+        //hints.resources().registerPattern("helpers.nashorn.js");
         hints.reflection().registerMethod(Status.class.getMethod("name"), ExecutableMode.INVOKE);
     }
 }

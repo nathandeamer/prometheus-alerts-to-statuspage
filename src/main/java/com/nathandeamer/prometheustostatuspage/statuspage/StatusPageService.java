@@ -52,12 +52,12 @@ public class StatusPageService {
     }
 
     @SneakyThrows
-    public String createIncident(AlertWrapper alertWrapper) {
+    public void createIncident(AlertWrapper alertWrapper) {
         log.debug("Create incident: {}", alertWrapper);
         String pageId = alertWrapper.getCommonLabels().get(STATUSPAGE_PAGE_ID);
         String componentId = alertWrapper.getCommonLabels().get(STATUSPAGE_COMPONENT_ID);
 
-        return statusPageClient.createIncident(pageId, IncidentRequestWrapper.builder()
+        statusPageClient.createIncident(pageId, IncidentRequestWrapper.builder()
                 .incidentRequest(IncidentRequest.builder()
                         .name(statusPageIncidentTitleTemplate.apply(alertWrapper))
                         .impactOverride(getMaxImpactOverride(alertWrapper).name().toLowerCase())
@@ -66,7 +66,7 @@ public class StatusPageService {
                         .components(Map.of(componentId, getMaxComponentStatus(alertWrapper).getValue()))
                         .componentIds(List.of(componentId))
                         .build())
-                .build()).getId();
+                .build());
     }
 
     @SneakyThrows
