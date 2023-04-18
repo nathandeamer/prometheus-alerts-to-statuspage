@@ -3,6 +3,7 @@ package com.nathandeamer.prometheustostatuspage.statuspage;
 import com.nathandeamer.prometheustostatuspage.alertmanager.dto.Alert;
 import com.nathandeamer.prometheustostatuspage.alertmanager.dto.AlertWrapper;
 import com.nathandeamer.prometheustostatuspage.alertmanager.dto.Status;
+import com.nathandeamer.prometheustostatuspage.statuspage.configuration.HandlebarsConfiguration;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.ComponentStatus;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.ImpactOverride;
 import com.nathandeamer.prometheustostatuspage.statuspage.dto.IncidentComponentResponse;
@@ -53,7 +54,7 @@ public class StatusPageServiceTest {
 
     @BeforeAll
     public void setup() {
-        underTest = new StatusPageService(STATUS_PAGE_INCIDENT_TITLE_TEMPLATE, STATUS_PAGE_INCIDENT_CREATED_BODY_TEMPLATE, STATUS_PAGE_INCIDENT_UPDATED_BODY_TEMPLATE, STATUS_PAGE_INCIDENT_RESOLVED_BODY_TEMPLATE, mockStatusPageClient);
+        underTest = new StatusPageService(STATUS_PAGE_INCIDENT_TITLE_TEMPLATE, STATUS_PAGE_INCIDENT_CREATED_BODY_TEMPLATE, STATUS_PAGE_INCIDENT_UPDATED_BODY_TEMPLATE, STATUS_PAGE_INCIDENT_RESOLVED_BODY_TEMPLATE, mockStatusPageClient, new HandlebarsConfiguration().handlebars());
     }
 
     @Test
