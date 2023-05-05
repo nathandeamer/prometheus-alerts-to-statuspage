@@ -27,16 +27,11 @@ import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.buildAl
 import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.buildAlertWrapper;
 import static org.testcontainers.containers.Network.newNetwork;
 
-/*
-    2023-05-05: I'm STUCK.
-    Spring Boot Native cannot dynamically replace properties with environment variables supplied at runtime (I don't think).
-    The values needs to be backed in at
-    No this can't be true, as it is able to
- */
-
 // TODO:
-// 1. Start up wiremock container WITH some test endpoints
-// 2. How do I tell my built image
+// 1. Add more wiremock endpoints for an end to end test that covers all scenarios.
+// 2. Work out how to follow the container logs in the test logs.
+// 3. Does wiremock even need to be in a docker container. Could I use the wiremock from spring-cloud-contract?
+// 4. Should I be using MockServer instead? https://www.testcontainers.org/modules/mockserver/ (TestConainers version vs java version)
 public class ApplicationComponentTest {
 
     private static final Future<String> IMAGE_FUTURE =
@@ -71,12 +66,15 @@ public class ApplicationComponentTest {
 //                    .withLogConsumer(new Slf4jLogConsumer(LoggerFactory.getLogger(ApplicationComponentTest.class)))
 //                    .waitingFor(Wait.forHttp("/actuator/health").forStatusCode(200)); // Override the default wait strategy for distroless images. https://www.testcontainers.org/features/startup_and_waits/ - See: https://github.com/testcontainers/testcontainers-java/issues/3835
 
-    Network network = newNetwork();
+
+    // Allow both test containers to communicate by putting them on the same network: https://www.testcontainers.org/features/networking/
+    // https://github.com/testcontainers/testcontainers-java/blob/8f1421ad5310f75f371804c3a3a1402b0eaab6d4/core/src/test/java/org/testcontainers/containers/NetworkTest.java#L13
+    private Network network = newNetwork();
 
     @Container
     public GenericContainer<?> underTest = new GenericContainer<>("library/prometheus-alerts-to-statuspage:0.0.1-SNAPSHOT")
             .withExposedPorts(8080)
-            .withEnv("STATUSPAGE_APIURL", "http://wiremock:8080")
+            .withEnv("STATUSPAGE_APIURL", "http://wiremock:8080") // Override the statuspage-apiurl so the requests are made to wiremock.
             .withNetwork(network)
             .withNetworkAliases("prometheus-alerts-to-statuspage")
             .waitingFor(Wait.forHttp("/actuator/health").forStatusCode(200));
@@ -109,9 +107,9 @@ public class ApplicationComponentTest {
         webClient.get().uri("/actuator/health").exchange().expectStatus().is2xxSuccessful();
     }
 
-    // TODO: Wiremock: /pages/{pageId}/incidents/unresolved"
+
     @Test
-    public void trySomethingReal() throws Exception {
+    public void doSomethingReal() throws Exception {
         List<Alert> alerts = List.of(buildAlert(Status.FIRING, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.MAJOR_OUTAGE, STATUSPAGE_SUMMARY_VALUE));
         AlertWrapper alertWrapper = buildAlertWrapper(Status.FIRING, alerts);
 

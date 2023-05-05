@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/pages/statuspagePageId/incidents/unresolved"
+    "urlPattern": "/pages/.*/incidents/unresolved"
   },
   "response": {
     "status": 200,
