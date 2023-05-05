@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.4'
 	id 'io.spring.dependency-management' version '1.1.0'
-	id 'org.graalvm.buildtools.native' version '0.9.20'
+	id 'org.graalvm.buildtools.native' version '0.9.21'
 }
 
 group = 'com.nathandeamer'
@@ -17,10 +17,30 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url = uri("https://maven.pkg.github.com/wiremock/wiremock-testcontainers-java")
+		credentials {
+			username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER")
+			password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+		}
+	}
 }
 
 ext {
 	set('springCloudVersion', "2022.0.2")
+}
+
+sourceSets {
+	componentTest {
+		compileClasspath += sourceSets.main.output
+		runtimeClasspath += sourceSets.main.output
+		java {
+			srcDir("src/component-test/java")
+		}
+		resources {
+			srcDir("src/component-test/resources")
+		}
+	}
 }
 
 dependencyManagement {
@@ -29,13 +49,17 @@ dependencyManagement {
 	}
 }
 
+configurations {
+	componentTestImplementation.extendsFrom(testImplementation)
+	componentTestRuntimeOnly.extendsFrom(testRuntimeOnly)
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'io.github.openfeign:feign-okhttp:12.2'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	implementation 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 	implementation 'com.github.jknack:handlebars:4.3.1'
 
@@ -44,13 +68,39 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	testImplementation "org.springframework:spring-webflux"
-	testImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
-	testImplementation "org.testcontainers:testcontainers:1.18.0"
-	testImplementation "org.testcontainers:junit-jupiter:1.18.0"
-	testImplementation gradleTestKit()
+	componentTestImplementation "org.junit.jupiter:junit-jupiter:5.8.1"
+	componentTestImplementation "org.testcontainers:testcontainers:1.18.0"
+	componentTestImplementation "org.testcontainers:junit-jupiter:1.18.0"
+	componentTestImplementation 'org.wiremock.integrations.testcontainers:wiremock-testcontainers-module:1.0-alpha-4'
+	componentTestImplementation "org.springframework:spring-webflux"
+	componentTestImplementation gradleTestKit()
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+task componentTest(type: Test) {
+	description = "Run component tests"
+	group = "verification"
+	testClassesDirs = sourceSets.componentTest.output.classesDirs
+	classpath = sourceSets.componentTest.runtimeClasspath
+	outputs.upToDateWhen { false }
+	useJUnitPlatform()
+}
+
+// https://www.baeldung.com/gradle-source-sets
+task printSourceSetInformation(){
+	doLast{
+		sourceSets.each { srcSet ->
+			println "["+srcSet.name+"]"
+			print "-->Source directories: "+srcSet.allJava.srcDirs+"\n"
+			print "-->Output directories: "+srcSet.output.classesDirs.files+"\n"
+			println ""
+		}
+	}
+}
+
+tasks.named('bootBuildImage') {
+	//environment['BP_NATIVE_IMAGE_BUILD_ARGUMENTS'] = '--trace-object-instantiation=ch.qos.logback.classic.Logger'
 }

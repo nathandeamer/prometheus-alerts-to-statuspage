@@ -18,11 +18,16 @@ import org.junit.jupiter.api.condition.DisabledInNativeImage;
 import java.util.List;
 import java.util.Map;
 
-import static com.nathandeamer.prometheustostatuspage.statuspage.StatusPageService.STATUSPAGE_COMPONENT_ID;
-import static com.nathandeamer.prometheustostatuspage.statuspage.StatusPageService.STATUSPAGE_COMPONENT_STATUS;
-import static com.nathandeamer.prometheustostatuspage.statuspage.StatusPageService.STATUSPAGE_IMPACT_OVERRIDE;
-import static com.nathandeamer.prometheustostatuspage.statuspage.StatusPageService.STATUSPAGE_PAGE_ID;
-import static com.nathandeamer.prometheustostatuspage.statuspage.StatusPageService.STATUSPAGE_STATUS;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.STATUS_PAGE_INCIDENT_CREATED_BODY_TEMPLATE;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.STATUS_PAGE_INCIDENT_RESOLVED_BODY_TEMPLATE;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.STATUS_PAGE_INCIDENT_TITLE_TEMPLATE;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.STATUS_PAGE_INCIDENT_UPDATED_BODY_TEMPLATE;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.buildAlert;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.buildAlertWrapper;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.STATUSPAGE_COMPONENT_ID_VALUE;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.STATUSPAGE_INCIDENT_ID_VALUE;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.STATUSPAGE_PAGE_ID_VALUE;
+import static com.nathandeamer.prometheustostatuspage.AlertWrapperHelper.STATUSPAGE_SUMMARY_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -33,20 +38,7 @@ import static org.mockito.Mockito.when;
 public class StatusPageServiceTest {
 
     // Alert annotation.
-    private static final String STATSPAGE_SUMMARY = "statuspageSummary";
-    private static final String STATSPAGE_COMPONENT_NAME = "statuspageComponentName";
 
-    private static final String STATUS_PAGE_INCIDENT_TITLE_TEMPLATE = "title";
-    private static final String STATUS_PAGE_INCIDENT_CREATED_BODY_TEMPLATE = "create body";
-    private static final String STATUS_PAGE_INCIDENT_UPDATED_BODY_TEMPLATE = "update body";
-    private static final String STATUS_PAGE_INCIDENT_RESOLVED_BODY_TEMPLATE = "resolved body";
-
-    // Shared Test data
-    private final String statuspagePageIdValue = "statuspagePageId";
-    private final String statuspageComponentIdValue = "statuspageComponentId";
-    private final String statuspageIncidentIdValue = "statuspageIncidentId";
-    private final String statuspageComponentNameValue = "Status Page Component Name";
-    private final String statuspageSummaryValue = "Summary for Status Page";
 
     private final StatusPageClient mockStatusPageClient = mock(StatusPageClient.class);
 
@@ -60,8 +52,8 @@ public class StatusPageServiceTest {
     @Test
     public void testShouldCreateNewStatusPageIncidentForGroupedAlertWithCorrectMaxStatusAndMaxImpactOverride() {
         List<Alert> alerts = List.of(
-                buildAlert(Status.FIRING, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.DEGRADED_PERFORMANCE, statuspageSummaryValue),
-                buildAlert(Status.FIRING, ImpactOverride.MAJOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED, ComponentStatus.PARTIAL_OUTAGE, statuspageSummaryValue)
+                buildAlert(Status.FIRING, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.DEGRADED_PERFORMANCE, STATUSPAGE_SUMMARY_VALUE),
+                buildAlert(Status.FIRING, ImpactOverride.MAJOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED, ComponentStatus.PARTIAL_OUTAGE, STATUSPAGE_SUMMARY_VALUE)
         );
         AlertWrapper alertWrapper = buildAlertWrapper(Status.FIRING, alerts);
 
@@ -71,30 +63,30 @@ public class StatusPageServiceTest {
                         .impactOverride(ImpactOverride.MAJOR.name().toLowerCase())
                         .status(com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED.name().toLowerCase())
                         .body(STATUS_PAGE_INCIDENT_CREATED_BODY_TEMPLATE)
-                        .componentIds(List.of(statuspageComponentIdValue))
-                        .components(Map.of(statuspageComponentIdValue, ComponentStatus.PARTIAL_OUTAGE.getValue()))
+                        .componentIds(List.of(STATUSPAGE_COMPONENT_ID_VALUE))
+                        .components(Map.of(STATUSPAGE_COMPONENT_ID_VALUE, ComponentStatus.PARTIAL_OUTAGE.getValue()))
                         .build())
                 .build();
 
-        when(mockStatusPageClient.createIncident(statuspagePageIdValue, expectedRequest))
-                .thenReturn(IncidentResponse.builder().id(statuspageIncidentIdValue).build());
+        when(mockStatusPageClient.createIncident(STATUSPAGE_PAGE_ID_VALUE, expectedRequest))
+                .thenReturn(IncidentResponse.builder().id(STATUSPAGE_INCIDENT_ID_VALUE).build());
 
         underTest.createIncident(alertWrapper);
 
-        verify(mockStatusPageClient).createIncident(statuspagePageIdValue, expectedRequest);
+        verify(mockStatusPageClient).createIncident(STATUSPAGE_PAGE_ID_VALUE, expectedRequest);
     }
 
     @Test
     public void testShouldUpdateIncidentForGroupedAlertWithCorrectMaxStatusAndMaxImpactOverride() {
         List<Alert> alerts = List.of(
-                buildAlert(Status.FIRING, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.DEGRADED_PERFORMANCE, statuspageSummaryValue),
-                buildAlert(Status.RESOLVED, ImpactOverride.MAJOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED, ComponentStatus.PARTIAL_OUTAGE, statuspageSummaryValue)
+                buildAlert(Status.FIRING, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.DEGRADED_PERFORMANCE, STATUSPAGE_SUMMARY_VALUE),
+                buildAlert(Status.RESOLVED, ImpactOverride.MAJOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED, ComponentStatus.PARTIAL_OUTAGE, STATUSPAGE_SUMMARY_VALUE)
         );
         AlertWrapper alertWrapper = buildAlertWrapper(Status.FIRING, alerts);
 
         IncidentResponse incidentResponse = IncidentResponse.builder()
-                .id(statuspageIncidentIdValue)
-                .pageId(statuspagePageIdValue)
+                .id(STATUSPAGE_INCIDENT_ID_VALUE)
+                .pageId(STATUSPAGE_PAGE_ID_VALUE)
                 .build();
 
         IncidentRequestWrapper expectedRequest = IncidentRequestWrapper.builder()
@@ -102,30 +94,30 @@ public class StatusPageServiceTest {
                         .impactOverride(ImpactOverride.MAJOR.name().toLowerCase())
                         .status(com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED.name().toLowerCase())
                         .body(STATUS_PAGE_INCIDENT_UPDATED_BODY_TEMPLATE)
-                        .componentIds(List.of(statuspageComponentIdValue))
-                        .components(Map.of(statuspageComponentIdValue, ComponentStatus.DEGRADED_PERFORMANCE.getValue()))
+                        .componentIds(List.of(STATUSPAGE_COMPONENT_ID_VALUE))
+                        .components(Map.of(STATUSPAGE_COMPONENT_ID_VALUE, ComponentStatus.DEGRADED_PERFORMANCE.getValue()))
                         .build())
                 .build();
 
-        when(mockStatusPageClient.updateIncident(statuspagePageIdValue, statuspageIncidentIdValue, expectedRequest))
+        when(mockStatusPageClient.updateIncident(STATUSPAGE_PAGE_ID_VALUE, STATUSPAGE_INCIDENT_ID_VALUE, expectedRequest))
                 .thenReturn(incidentResponse);
 
         underTest.updateIncident(incidentResponse, alertWrapper);
 
-        verify(mockStatusPageClient).updateIncident(statuspagePageIdValue, statuspageIncidentIdValue, expectedRequest);
+        verify(mockStatusPageClient).updateIncident(STATUSPAGE_PAGE_ID_VALUE, STATUSPAGE_INCIDENT_ID_VALUE, expectedRequest);
     }
 
     @Test
     public void testShouldResolveIncident() {
         List<Alert> alerts = List.of(
-                buildAlert(Status.RESOLVED, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.DEGRADED_PERFORMANCE, statuspageSummaryValue),
-                buildAlert(Status.RESOLVED, ImpactOverride.MAJOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED, ComponentStatus.PARTIAL_OUTAGE, statuspageSummaryValue)
+                buildAlert(Status.RESOLVED, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.DEGRADED_PERFORMANCE, STATUSPAGE_SUMMARY_VALUE),
+                buildAlert(Status.RESOLVED, ImpactOverride.MAJOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED, ComponentStatus.PARTIAL_OUTAGE, STATUSPAGE_SUMMARY_VALUE)
         );
         AlertWrapper alertWrapper = buildAlertWrapper(Status.RESOLVED, alerts);
 
         IncidentResponse incidentResponse = IncidentResponse.builder()
-                .id(statuspageIncidentIdValue)
-                .pageId(statuspagePageIdValue)
+                .id(STATUSPAGE_INCIDENT_ID_VALUE)
+                .pageId(STATUSPAGE_PAGE_ID_VALUE)
                 .build();
 
         IncidentRequestWrapper expectedRequest = IncidentRequestWrapper.builder()
@@ -133,62 +125,43 @@ public class StatusPageServiceTest {
                         .impactOverride(ImpactOverride.MAJOR.name().toLowerCase())
                         .status(com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.RESOLVED.name().toLowerCase())
                         .body(STATUS_PAGE_INCIDENT_RESOLVED_BODY_TEMPLATE)
-                        .componentIds(List.of(statuspageComponentIdValue))
-                        .components(Map.of(statuspageComponentIdValue, ComponentStatus.OPERATIONAL.getValue()))
+                        .componentIds(List.of(STATUSPAGE_COMPONENT_ID_VALUE))
+                        .components(Map.of(STATUSPAGE_COMPONENT_ID_VALUE, ComponentStatus.OPERATIONAL.getValue()))
                         .build())
                 .build();
 
-        when(mockStatusPageClient.updateIncident(statuspagePageIdValue, statuspageIncidentIdValue, expectedRequest))
+        when(mockStatusPageClient.updateIncident(STATUSPAGE_PAGE_ID_VALUE, STATUSPAGE_INCIDENT_ID_VALUE, expectedRequest))
                 .thenReturn(incidentResponse);
 
         underTest.resolveIncident(incidentResponse, alertWrapper);
 
-        verify(mockStatusPageClient).updateIncident(statuspagePageIdValue, statuspageIncidentIdValue, expectedRequest);
+        verify(mockStatusPageClient).updateIncident(STATUSPAGE_PAGE_ID_VALUE, STATUSPAGE_INCIDENT_ID_VALUE, expectedRequest);
     }
 
     @Test
     public void getUnresolvedIncidentsForAlertWrapper() {
         List<Alert> alerts = List.of(
-                buildAlert(Status.FIRING, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.DEGRADED_PERFORMANCE, statuspageSummaryValue),
-                buildAlert(Status.FIRING, ImpactOverride.MAJOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED, ComponentStatus.PARTIAL_OUTAGE, statuspageSummaryValue)
+                buildAlert(Status.FIRING, ImpactOverride.MINOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.INVESTIGATING, ComponentStatus.DEGRADED_PERFORMANCE, STATUSPAGE_SUMMARY_VALUE),
+                buildAlert(Status.FIRING, ImpactOverride.MAJOR, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status.IDENTIFIED, ComponentStatus.PARTIAL_OUTAGE, STATUSPAGE_SUMMARY_VALUE)
         );
         AlertWrapper alertWrapper = buildAlertWrapper(Status.FIRING, alerts);
 
         IncidentResponse incidentResponse = IncidentResponse.builder()
-                .id(statuspageIncidentIdValue)
-                .pageId(statuspagePageIdValue)
+                .id(STATUSPAGE_INCIDENT_ID_VALUE)
+                .pageId(STATUSPAGE_PAGE_ID_VALUE)
                 .components(List.of(IncidentComponentResponse.builder()
-                        .id(statuspageComponentIdValue)
+                        .id(STATUSPAGE_COMPONENT_ID_VALUE)
                         .build()))
                 .build();
 
-        when(mockStatusPageClient.getUnresolvedIncidents(statuspagePageIdValue))
+        when(mockStatusPageClient.getUnresolvedIncidents(STATUSPAGE_PAGE_ID_VALUE))
                 .thenReturn(List.of(incidentResponse));
 
         List<IncidentResponse> result = underTest.getUnresolvedIncidentsForAlertWrapper(alertWrapper);
 
         assertEquals(1, result.size());
-        assertEquals(result.get(0).getId(), statuspageIncidentIdValue);
+        assertEquals(result.get(0).getId(), STATUSPAGE_INCIDENT_ID_VALUE);
     }
 
-    private AlertWrapper buildAlertWrapper(Status status, List<Alert> alerts) {
-        return AlertWrapper.builder()
-                .status(status)
-                .alerts(alerts)
-                .commonLabels(Map.of(STATUSPAGE_PAGE_ID, statuspagePageIdValue, STATUSPAGE_COMPONENT_ID, statuspageComponentIdValue))
-                .commonAnnotations(Map.of(STATSPAGE_COMPONENT_NAME, statuspageComponentNameValue))
-                .build();
-    }
-
-    private Alert buildAlert(Status alertStatus, ImpactOverride impactOverride, com.nathandeamer.prometheustostatuspage.statuspage.dto.Status statusPageStatus, ComponentStatus componentStatus, String statusPageSummary) {
-        return Alert.builder()
-                .status(alertStatus)
-                .annotations(Map.of(
-                        STATUSPAGE_IMPACT_OVERRIDE, impactOverride.name().toLowerCase(),
-                        STATUSPAGE_STATUS, statusPageStatus.name().toLowerCase(),
-                        STATUSPAGE_COMPONENT_STATUS, componentStatus.getValue(),
-                        STATSPAGE_SUMMARY, statusPageSummary
-                )).build();
-    }
 
 }

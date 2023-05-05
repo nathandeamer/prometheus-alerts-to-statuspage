@@ -14,10 +14,6 @@ server:
 
 
 spring:
-  cloud:
-    openfeign:
-      okhttp:
-        enabled: true # Use okhttp for PATCH support
   lifecycle:
     timeout-per-shutdown-phase: 30s # 30s is the default
 
